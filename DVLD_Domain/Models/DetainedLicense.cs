@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DVDL_Domain.Models
+{
+    public class DetainedLicense:BaseEntity
+    {
+        public int LicenseID { get; private set; } 
+
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal FineFees { get; private set; }
+
+        public bool IsReleased { get; private set; } 
+
+        public DateTime? ReleaseDate { get; private set; } 
+        public int? ReleasedByUserID { get; private set; } 
+        public int? ReleaseApplicationID { get; private set; } 
+
+        [ForeignKey("LicenseID")]
+        public virtual License License { get; private set; }
+
+        [ForeignKey("ReleasedByUserID")]
+        public virtual User ReleasedByUser { get; private set; }
+
+        [ForeignKey("ReleaseApplicationID")]
+        public virtual Application ReleaseApplication { get; private set; }
+
+
+        private DetainedLicense()
+        {
+        }
+
+        public DetainedLicense(int licenseID, decimal fineFees, int createdByUserId):base(createdByUserId)
+        {
+            if (licenseID <= 0)
+                throw new ArgumentException("LicenseID must be a positive integer.", nameof(licenseID));
+            if (fineFees < 0)
+                throw new ArgumentException("FineFees cannot be negative.", nameof(fineFees));
+            if (createdByUserId <= 0)
+                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
+            LicenseID = licenseID;
+            FineFees = fineFees;
+            IsReleased = false;
+        }
+
+
+        public void ReleaseLicense(DateTime releaseDate, int releasedByUserID, int releaseApplicationID)
+        {
+            if (IsReleased)
+                throw new InvalidOperationException("The license has already been released.");
+            if (releasedByUserID <= 0)
+                throw new ArgumentException("ReleasedByUserID must be a positive integer.", nameof(releasedByUserID));
+            if (releaseApplicationID <= 0)
+                throw new ArgumentException("ReleaseApplicationID must be a positive integer.", nameof(releaseApplicationID));
+            if(releaseDate < CreatedAt)
+                throw new ArgumentException("ReleaseDate cannot be earlier than the detention date.", nameof(releaseDate));
+            if(releaseDate<= DateTime.UtcNow.AddMinutes(-5))
+                throw new ArgumentException("ReleaseDate must be a future date.", nameof(releaseDate));
+            IsReleased = true;
+            ReleaseDate = releaseDate;
+            ReleasedByUserID = releasedByUserID;
+            ReleaseApplicationID = releaseApplicationID;
+            UpdateModificationInfo(releasedByUserID);
+        }
+
+
+    }
+}
