@@ -1,0 +1,42 @@
+# Visual Studio / .NET
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results and logs
+*.log
+*.tlog
+TestResults/
+*.pdb
+*.ilk
+*.cache
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Rider / ReSharper
+.idea/
+_ReSharper*/
+*.DotSettings.user
+
+# Node / front-end (if present)
+node_modules/
+npm-debug.log
+dist/
+
+# Misc
+*.dbmdl
+*.VC.db
+*.VC.opendb
+*.psess
+*.vsp
+*.db
+.DS_Store
+Thumbs.db
