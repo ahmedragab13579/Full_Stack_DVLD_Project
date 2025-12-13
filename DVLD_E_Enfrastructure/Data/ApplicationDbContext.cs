@@ -1,4 +1,5 @@
-﻿using DVDL_Domain.Models;
+﻿using DVLD_Domain.Models;
+using DVLD_Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,15 @@ namespace DVLD_E_Enfrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
 
 
         public DbSet<Application> Applications { get; set; }
@@ -43,6 +48,8 @@ namespace DVLD_E_Enfrastructure.Data
         public DbSet<Appointment> Appointments { get; set; }
 
         public DbSet<Driver> Drivers { get; set; }
+
+        public DbSet<UserLoginAudit> userUserLoginAudits { get; set; }
 
 
 

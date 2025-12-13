@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class ApplicationType:BaseEntity
     {
@@ -38,7 +38,7 @@ namespace DVDL_Domain.Models
         }
 
 
-        public void UpdateDetails(string title, decimal fees)
+        public void UpdateDetails(string title, decimal fees,int userid)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title cannot be null or empty.", nameof(title));
@@ -46,6 +46,7 @@ namespace DVDL_Domain.Models
                 throw new ArgumentException("Fees cannot be negative.", nameof(fees));
             Title = title;
             Fees = fees;
+            base.UpdateModificationInfo(userid);
         }   
     }
 }

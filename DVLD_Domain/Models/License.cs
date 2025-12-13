@@ -1,4 +1,4 @@
-﻿using DVDL_Domain.Enums;
+﻿using DVLD_Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class License:BaseEntity
     {

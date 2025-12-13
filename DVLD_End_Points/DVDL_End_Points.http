@@ -1,6 +1,0 @@
-@DVDL_End_Points_HostAddress = http://localhost:5168
-
-GET {{DVDL_End_Points_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

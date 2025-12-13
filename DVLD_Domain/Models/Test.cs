@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class Test:BaseEntity
     {
@@ -25,6 +25,8 @@ namespace DVDL_Domain.Models
 
         public void UpdateTestResult(bool testResult, string notes, int updatedByUserId)
         {
+            if (updatedByUserId <= 0)
+                throw new ArgumentException("UpdatedByUserId must be a positive integer.", nameof(updatedByUserId));
             if (notes != null && notes.Length > 500)
                 throw new ArgumentException("Notes cannot exceed 500 characters.", nameof(notes));
             if(this.TestResult!=null)

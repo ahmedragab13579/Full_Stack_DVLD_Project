@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class DetainedLicense:BaseEntity
     {
@@ -48,7 +48,7 @@ namespace DVDL_Domain.Models
         }
 
 
-        public void ReleaseLicense(DateTime releaseDate, int releasedByUserID, int releaseApplicationID)
+        public void ReleaseLicense(int releasedByUserID, int releaseApplicationID)
         {
             if (IsReleased)
                 throw new InvalidOperationException("The license has already been released.");
@@ -56,12 +56,8 @@ namespace DVDL_Domain.Models
                 throw new ArgumentException("ReleasedByUserID must be a positive integer.", nameof(releasedByUserID));
             if (releaseApplicationID <= 0)
                 throw new ArgumentException("ReleaseApplicationID must be a positive integer.", nameof(releaseApplicationID));
-            if(releaseDate < CreatedAt)
-                throw new ArgumentException("ReleaseDate cannot be earlier than the detention date.", nameof(releaseDate));
-            if(releaseDate<= DateTime.UtcNow.AddMinutes(-5))
-                throw new ArgumentException("ReleaseDate must be a future date.", nameof(releaseDate));
             IsReleased = true;
-            ReleaseDate = releaseDate;
+            ReleaseDate = DateTime.UtcNow;
             ReleasedByUserID = releasedByUserID;
             ReleaseApplicationID = releaseApplicationID;
             UpdateModificationInfo(releasedByUserID);

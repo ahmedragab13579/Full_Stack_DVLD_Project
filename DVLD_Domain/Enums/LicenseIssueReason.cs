@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Enums
+namespace DVLD_Domain.Enums
 {
     public enum LicenseIssueReason
     {
