@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class BaseEntity
     {
@@ -43,9 +43,7 @@ namespace DVDL_Domain.Models
             UpdatedAt = DateTime.UtcNow;
             UpdatedByUserId = userid;
         }
-
-
-        protected void UpdateModificationInfo(int userid)
+        public void UpdateModificationInfo(int userid)
         {
             UpdatedAt = DateTime.UtcNow;
             UpdatedByUserId = userid;

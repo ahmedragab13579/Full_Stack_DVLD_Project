@@ -1,13 +1,15 @@
-﻿using DVDL_Domain.Enums;
+﻿using DVLD_Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class Person : BaseEntity
     {
@@ -52,7 +54,7 @@ namespace DVDL_Domain.Models
         [MaxLength(255)]
         public string ImagePath { get; private set; } 
 
-        public int NationalityCountryID { get; private set; }
+        public int CountryID { get; private set; }
 
         [ForeignKey("NationalityCountryID")]
         public virtual Country NationalityCountry { get; private set; }
@@ -64,34 +66,39 @@ namespace DVDL_Domain.Models
         {
         }
 
+        public void UpdateAllInformation(string phone, string email, string address,
+            string firstName,  string secondName, string thirdName, string lastName,
+            DateTime dateOfBirth, string imagePath,int userid)
+        {
+            UpdateContactInfo(phone, email, address);
+            UpdateNames(firstName, secondName, thirdName, lastName);
+            UpdateDateOfBirth(dateOfBirth);
+            UpdateImagePath(imagePath);
+            base.UpdateModificationInfo(userid);
 
-        public void UpdateContactInfo(int updatedByUserId, string phone, string email, string address)
+        }
+
+        private void UpdateContactInfo(string phone, string email, string address)
         {
             if (string.IsNullOrWhiteSpace(phone)) 
                 throw new ArgumentException("Phone is required.", nameof(phone));
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Email is required.", nameof(email));
-            if(updatedByUserId<=0)
-                throw new ArgumentException("UpdatedByUserId must be a positive integer.", nameof(updatedByUserId));
 
             Phone = phone;
             Email = email; 
             Address = address;
-            base.UpdateModificationInfo(updatedByUserId);
+
         }
 
-        public void UpdateImagePath(int updatedByUserId, string imagePath)
+        private void UpdateImagePath(string imagePath)
         {
-            if ( updatedByUserId<=0)
-                throw new ArgumentException("UpdatedByUserId must be a positive integer.", nameof(updatedByUserId));
             ImagePath = imagePath;
-            base.UpdateModificationInfo(updatedByUserId);
+
         }
 
-        public void UpdateNames(int updatedByUserId, string firstName, string secondName, string thirdName, string lastName)
+        private void UpdateNames(string firstName, string secondName, string thirdName, string lastName)
         {
-            if(updatedByUserId <= 0)
-                throw new ArgumentException("UpdatedByUserId must be a positive integer.", nameof(updatedByUserId));
             if (string.IsNullOrWhiteSpace(firstName))
                 throw new ArgumentException("FirstName is required.", nameof(firstName));
             if (string.IsNullOrWhiteSpace(secondName))
@@ -105,27 +112,26 @@ namespace DVDL_Domain.Models
             SecondName = secondName;
             ThirdName = thirdName; 
             LastName = lastName;
-            base.UpdateModificationInfo(updatedByUserId);
+
         }
 
-        public void UpdateDateOfBirth(int updatedByUserId, DateTime dateOfBirth)
+        private void UpdateDateOfBirth(DateTime dateOfBirth)
         {
             if (dateOfBirth >= DateTime.UtcNow)
                 throw new ArgumentException("DateOfBirth must be in the past.", nameof(dateOfBirth));
 
             DateOfBirth = dateOfBirth;
-            base.UpdateModificationInfo(updatedByUserId);
+
+
         }
 
         public Person(
             string nationalNo, string firstName, string secondName, string lastName,
-            DateTime dateOfBirth, Gender gender, string phone, int nationalityCountryID, int createdByUserId,
-            string thirdName, string email, string address, string imagePath
+            DateTime dateOfBirth, Gender gender, string phone, int nationalityCountryID, 
+            string thirdName, string email, string address, string imagePath,int userid
         )
-            : base(createdByUserId)
+            : base(userid)
         {
-            if (createdByUserId <= 0)
-                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
             if (string.IsNullOrWhiteSpace(nationalNo))
                 throw new ArgumentException("NationalNo is required.", nameof(nationalNo));
             if (string.IsNullOrWhiteSpace(firstName))
@@ -149,8 +155,7 @@ namespace DVDL_Domain.Models
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Phone = phone;
-            NationalityCountryID = nationalityCountryID;
-
+            CountryID = nationalityCountryID;
             ThirdName = thirdName;
             Email = email;
             Address = address;

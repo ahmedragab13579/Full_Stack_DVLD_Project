@@ -1,4 +1,4 @@
-﻿using DVDL_Domain.Enums;
+﻿using DVLD_Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class Application:BaseEntity
     {
@@ -32,7 +32,7 @@ namespace DVDL_Domain.Models
 
         public virtual License License { get; private set; }
 
-        public void UpdateStatus(ApplicationStatus newStatus)
+        public void UpdateStatus(ApplicationStatus newStatus,int updatedbyuserid)
         {
             if(this.Status== ApplicationStatus.Completed)
                 throw new InvalidOperationException("Cannot change status of a completed application.");
@@ -45,6 +45,8 @@ namespace DVDL_Domain.Models
                 Status = newStatus;
                 LastStatusDate = DateTime.UtcNow;
             }
+
+            base.UpdateModificationInfo(updatedbyuserid);
         }
 
         private Application()

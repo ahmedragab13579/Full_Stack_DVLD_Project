@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class Country
     {

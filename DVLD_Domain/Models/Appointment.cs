@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class Appointment:BaseEntity
     {
@@ -34,6 +34,17 @@ namespace DVDL_Domain.Models
         {
             
         }
+
+        public void UpdateAppointmentDate(DateTime newAppointmentDate, int userId)
+        {
+            if (IsLocked)
+                throw new InvalidOperationException("Cannot update a locked appointment.");
+            if (newAppointmentDate < DateTime.UtcNow)
+                throw new ArgumentException("New appointment date cannot be in the past.", nameof(newAppointmentDate));
+            AppointmentDate = newAppointmentDate;
+            base.UpdateModificationInfo(userId);
+        }
+
         public void LockAppointment(int userId)
         {
             if (IsLocked)
@@ -55,6 +66,8 @@ namespace DVDL_Domain.Models
             IsLocked = false;
             base.UpdateModificationInfo(userId);
         }
+  
+        
         public Appointment(int testTypeID, int localDrivingLicenseApplicationID, DateTime appointmentDate, decimal paidFees, int createdByUserId) : base(createdByUserId)
         {
             if (testTypeID <= 0)

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DVDL_Domain.Models
+namespace DVLD_Domain.Models
 {
     public class LocalDrivingLicenseApplication
     {
@@ -15,6 +15,8 @@ namespace DVDL_Domain.Models
 
         public int LicenseClassID { get; private set; }
 
+        public int NumberofPassedTests { get; private set; } = 0;
+
         public virtual Application Application { get; private set; }
 
         [ForeignKey("LicenseClassID")]
@@ -22,21 +24,21 @@ namespace DVDL_Domain.Models
 
         public virtual ICollection<Appointment> Appointments { get; private set; } = new HashSet<Appointment>();
 
-
         private LocalDrivingLicenseApplication()
         {
-
+            
         }
 
 
-        public LocalDrivingLicenseApplication(int applicationId, int licenseClassId) 
+        public LocalDrivingLicenseApplication(int applicationId, int licenseClassId)
         {
             if (applicationId <= 0)
-                throw new ArgumentException("ApplicationID must be a positive integer.", nameof(applicationId));
+                throw new ArgumentException("Application ID must be greater than zero.", nameof(applicationId));
             if (licenseClassId <= 0)
-                throw new ArgumentException("LicenseClassID must be a positive integer.", nameof(licenseClassId));
+                throw new ArgumentException("License Class ID must be greater than zero.", nameof(licenseClassId));
             ApplicationID = applicationId;
             LicenseClassID = licenseClassId;
         }
+
     }
 }
