@@ -10,7 +10,7 @@ namespace DVLD_Domain.Models
     public class Country
     {
         [Key]
-        public int Id { get; private set; } 
+        public int CountryId { get; private set; } 
         [Required]
         [MaxLength(100)]
         public string Name { get; private set; }

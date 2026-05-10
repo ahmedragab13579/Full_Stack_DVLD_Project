@@ -53,15 +53,15 @@ namespace DVLD_Domain.Models
         {
             
         }
-        public Application(int personID, int applicationTypeID, decimal fees,int createdbyuserid):base(createdbyuserid)
+        public Application(int Id, int applicationTypeID, decimal fees,int? createdbyuserid):base(createdbyuserid)
         {
-            if(personID<=0)
-                throw new ArgumentException("PersonID must be a positive integer.", nameof(personID));
+            if(Id<=0)
+                throw new ArgumentException("Id must be a positive integer.", nameof(Id));
             if(applicationTypeID<=0)
                 throw new ArgumentException("ApplicationTypeID must be a positive integer.", nameof(applicationTypeID));
             if(fees<0)
                 throw new ArgumentException("Fees cannot be negative.", nameof(fees));
-            PersonID = personID;
+            Id = Id;
             ApplicationTypeID = applicationTypeID;
             Fees = fees;
             ApplicationDate = DateTime.UtcNow;

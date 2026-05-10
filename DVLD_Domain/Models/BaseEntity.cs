@@ -16,13 +16,13 @@ namespace DVLD_Domain.Models
 
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
-        public int CreatedByUserId { get; private set; }
+        public int? createdbyuserid { get; private set; }
 
         public DateTime? UpdatedAt { get; private set; }
 
         public int? UpdatedByUserId { get; private set; }
 
-        [ForeignKey("CreatedByUserId")]
+        [ForeignKey("createdbyuserid")]
         public virtual User CreatedByUser { get; private set; }
 
         [ForeignKey("UpdatedByUserId")]
@@ -48,11 +48,11 @@ namespace DVLD_Domain.Models
             UpdatedAt = DateTime.UtcNow;
             UpdatedByUserId = userid;
         }
-        public BaseEntity(int createdByUserId)
+        public BaseEntity(int? createdbyuserid)
         {
-            if (createdByUserId <= 0)
-                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
-            CreatedByUserId = createdByUserId;
+            if (createdbyuserid <= 0)
+                throw new ArgumentException("createdbyuserid must be a positive integer.", nameof(createdbyuserid));
+            this.createdbyuserid = createdbyuserid;
             CreatedAt = DateTime.UtcNow;
         }
     }

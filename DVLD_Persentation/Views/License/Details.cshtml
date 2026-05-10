@@ -1,0 +1,116 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Driver License Details";
+}
+
+<div class="max-w-4xl mx-auto">
+    <div class="mb-8 flex items-center justify-between">
+        <a asp-controller="Person" asp-action="Index" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-dvld-teal transition-all">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Profiles
+        </a>
+        <div class="flex gap-3">
+             <a asp-action="Renew" asp-route-id="@Model.LicenseID" class="btn-primary text-xs px-6 py-2">Renew License</a>
+             <button onclick="window.print()" class="px-6 py-2 rounded-lg border border-slate-700 bg-dvld-gray text-slate-300 text-xs font-bold uppercase tracking-widest hover:border-dvld-teal transition-all flex items-center gap-2">
+                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                 Print Copy
+             </button>
+        </div>
+    </div>
+
+    <!-- The License Card -->
+    <div class="print:m-0 print:shadow-none">
+        <div class="dvld-card relative overflow-hidden bg-gradient-to-br from-slate-900 via-dvld-dark to-slate-900 border-2 border-slate-700 p-8 shadow-2xl">
+            <!-- Background Decoration -->
+            <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-dvld-teal/5 blur-3xl"></div>
+            <div class="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl"></div>
+            
+            <div class="relative z-10">
+                <div class="flex justify-between border-b border-slate-700/50 pb-6 mb-8">
+                    <div>
+                        <h2 class="text-2xl font-black italic tracking-tighter text-white">DVLD <span class="text-dvld-teal">LICENSE</span></h2>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Driving License Management System</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-dvld-teal">License Number</p>
+                        <p class="text-xl font-mono font-bold text-white">#@Model.LicenseID</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Photo -->
+                    <div class="flex flex-col items-center">
+                        <div class="h-40 w-32 rounded-lg bg-slate-800 border-2 border-slate-700 overflow-hidden shadow-inner flex items-center justify-center">
+                             <svg class="h-20 w-20 text-slate-700" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <div class="mt-4 inline-block px-3 py-1 rounded bg-dvld-teal text-dvld-dark text-[10px] font-bold uppercase tracking-widest">
+                            @(Model.IsActive ? "Valid" : "Inactive")
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="md:col-span-3 grid grid-cols-2 gap-y-6 gap-x-4">
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Full Name</p>
+                            <p class="text-sm font-bold text-white">Ahmed Ragab</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">License Class</p>
+                            <p class="text-sm font-bold text-dvld-teal">Class 3 - Ordinary driving license</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">National No.</p>
+                            <p class="text-sm font-mono text-white">N34291</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Date of Birth</p>
+                            <p class="text-sm font-bold text-white">12/05/1995</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Issue Date</p>
+                            <p class="text-sm font-bold text-white">@Model.IssueDate.ToShortDateString()</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Expiry Date</p>
+                            <p class="text-sm font-bold text-amber-500">@Model.ExpirationDate.ToShortDateString()</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Notes</p>
+                            <p class="text-xs text-slate-400 italic">@(Model.Notes ?? "No specific restrictions or endorsements.")</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-700/50 flex justify-between items-end">
+                    <div class="flex gap-8">
+                        <div>
+                            <p class="text-[8px] font-bold uppercase tracking-widest text-slate-600">Issue Reason</p>
+                            <p class="text-[10px] text-slate-400">First Time</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] font-bold uppercase tracking-widest text-slate-600">Detained</p>
+                            <p class="text-[10px] text-red-400">No</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                         <div class="h-10 w-24 border border-slate-700 bg-slate-800/50 rounded flex items-center justify-center opacity-30">
+                            <span class="text-[8px] uppercase font-bold text-slate-500">Security Seal</span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        header, footer, .mb-8, .btn-primary { display: none !important; }
+        body { background-color: white !important; color: black !important; padding: 0 !important; }
+        .dvld-card { border-color: #333 !important; box-shadow: none !important; margin: 0 !important; }
+        .text-slate-500, .text-slate-600 { color: #666 !important; }
+        .text-dvld-light, .text-white { color: black !important; }
+        .text-dvld-teal { color: #00818a !important; }
+    }
+</style>

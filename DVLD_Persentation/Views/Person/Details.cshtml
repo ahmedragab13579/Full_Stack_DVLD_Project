@@ -1,0 +1,104 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Person Details";
+}
+
+<div class="max-w-5xl mx-auto space-y-8">
+    <div class="flex items-center justify-between bg-dvld-gray/20 rounded-3xl p-6 border border-white/5 shadow-sm">
+        <a asp-action="Index" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-dvld-teal transition-all">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to List
+        </a>
+        <div class="flex gap-3">
+            @if (Model.User == null)
+            {
+                <a href="@Url.Action("Create", "User", new { Id = Model.Id })" class="px-5 py-2.5 bg-dvld-teal/10 text-dvld-teal border border-dvld-teal/20 hover:bg-dvld-teal hover:text-dvld-dark transition-all rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-dvld-teal/5">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    Create User
+                </a>
+            }
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="bg-dvld-teal hover:bg-dvld-teal/90 text-dvld-dark px-6 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg shadow-dvld-teal/10">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                Edit Profile
+            </a>
+        </div>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-3">
+        <div class="bg-dvld-gray/30 rounded-[2.5rem] p-10 border border-white/5 flex flex-col items-center text-center shadow-xl">
+            <div class="relative mb-6">
+                <div class="h-40 w-40 rounded-3xl bg-slate-900 border-2 border-slate-700 overflow-hidden shadow-2xl p-1">
+                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <img src="E:\Full_Stack_DVLD_Project\DVLD_Persentation\wwwroot\Images\Icons\Man 32.png" class="h-full w-full object-cover rounded-2xl" alt="Profile" />
+                    }
+                    else
+                    {
+                        <div class="h-full w-full flex items-center justify-center text-slate-800">
+                            <svg class="h-20 w-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
+                        </div>
+                    }
+                </div>
+                <div class="absolute -bottom-3 -right-3 h-10 w-10 rounded-full bg-dvld-teal border-4 border-dvld-dark flex items-center justify-center text-dvld-dark shadow-xl">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+            </div>
+            <h2 class="text-2xl font-black text-white tracking-tight">@Model.FirstName @Model.LastName</h2>
+            <p class="text-[11px] font-black uppercase tracking-[0.2em] text-dvld-teal mt-2 px-4 py-1 bg-dvld-teal/10 rounded-full">Record #@Model.Id</p>
+        </div>
+
+        <div class="md:col-span-2 space-y-8">
+            <div class="bg-dvld-gray/30 rounded-[2.5rem] p-10 border border-white/5 shadow-xl">
+                <h3 class="text-[11px] font-black uppercase tracking-[0.2em] text-dvld-teal/70 mb-8 border-b border-white/5 pb-4">Personal Identity</h3>
+                <div class="grid grid-cols-2 gap-y-10 gap-x-8">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Full Legal Name</p>
+                        <p class="text-base text-dvld-light font-bold">@Model.FirstName @Model.SecondName @Model.ThirdName @Model.LastName</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">National ID</p>
+                        <p class="text-base text-dvld-light font-bold">@Model.NationalNo</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Date of Birth</p>
+                        <p class="text-base text-dvld-light font-bold">@Model.DateOfBirth.ToString("MMMM dd, yyyy")</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Gender</p>
+                        <p class="text-base text-dvld-light font-bold">@Model.Gender</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-dvld-gray/30 rounded-[2.5rem] p-8 border border-white/5 shadow-xl">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-dvld-teal/70 mb-6 border-b border-white/5 pb-3">Contact Info</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Phone Number</p>
+                            <p class="text-sm text-dvld-light font-bold">@Model.Phone</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Email Address</p>
+                            <p class="text-sm text-dvld-light font-bold">@(string.IsNullOrEmpty(Model.Email) ? "N/A" : Model.Email)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-dvld-gray/30 rounded-[2.5rem] p-8 border border-white/5 shadow-xl">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-dvld-teal/70 mb-6 border-b border-white/5 pb-3">Location</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Nationality</p>
+                            <p class="text-sm text-dvld-light font-bold">@Model.NationalityCountry.Name</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Address</p>
+                            <p class="text-sm text-dvld-light font-bold leading-relaxed">@Model.Address</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

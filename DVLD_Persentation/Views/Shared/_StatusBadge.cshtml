@@ -1,0 +1,16 @@
+@model (string Status, string Label)
+
+@{
+    var statusClass = Model.Status.ToLower() switch
+    {
+        "active" or "completed" or "approved" or "passed" => "status-success",
+        "pending" or "scheduled" or "under review" => "status-pending",
+        "cancelled" or "failed" or "rejected" or "expired" => "status-danger",
+        _ => "bg-slate-700/30 text-slate-400 border-slate-700/50"
+    };
+}
+
+<span class="status-badge @statusClass">
+    <span class="h-1.5 w-1.5 rounded-full bg-current mr-2 animate-pulse"></span>
+    @Model.Label
+</span>

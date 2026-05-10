@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DVLD Auth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- استخدام خط Inter مع أوزان مختلفة بيفرق جداً في القراءة -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+                    },
+                    colors: {
+                        'dvld-dark': '#1a1e23', // تغميق الخلفية شوية بيدي فخامة أكتر
+                        'dvld-gray': '#2d333b',
+                        'dvld-teal': '#00ADB5',
+                        'dvld-light': '#EEEEEE',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-dvld-dark text-dvld-light flex items-center justify-center p-6 antialiased">
+    <!-- الـ max-w-md مناسب جداً للـ Auth، بس زودنا الـ p-6 للـ body عشان الشاشات الصغيرة -->
+    <div class="w-full max-w-md space-y-8">
+
+        <!-- Header Section -->
+        <div class="text-center">
+            <div class="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-dvld-teal text-dvld-dark mb-6 shadow-[0_0_30px_rgba(0,173,181,0.2)] transition-transform hover:scale-105 duration-300">
+                <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-extrabold tracking-tight text-white mb-3">DVLD System</h1>
+            <p class="text-slate-400 text-lg font-light tracking-wide">@ViewData["Title"]</p>
+        </div>
+
+        <!-- Main Content Area -->
+        <!-- ضفت هنا wrapper للـ RenderBody عشان تضمن إن أي فورمة جواه تكون واخدة مسافات كويسة -->
+        <div class="bg-dvld-gray/50 p-8 rounded-3xl border border-white/5 backdrop-blur-sm shadow-xl">
+            <partial name="_Alerts" />
+            <div class="mt-2">
+                @RenderBody()
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <p class="text-center text-sm text-slate-500 font-medium opacity-60">
+            &copy; @DateTime.Now.Year <span class="text-dvld-teal/80">Driving License Management System</span>. <br> All rights reserved.
+        </p>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

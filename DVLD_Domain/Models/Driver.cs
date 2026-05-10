@@ -12,17 +12,17 @@ namespace DVLD_Domain.Models
     public class Driver
     {
         [Key, ForeignKey("Person")]
-        public int PersonID { get; private set; }
+        public int Id { get; private set; }
 
         [Required]
-        public int CreatedByUserID { get; private set; } 
+        public int? createdbyuserid { get; private set; } 
 
         [Required]
         public DateTime CreatedDate { get; private set; }
 
         public virtual Person Person { get; private set; }
 
-        [ForeignKey("CreatedByUserID")]
+        [ForeignKey("createdbyuserid")]
         public virtual User CreatedByUser { get; private set; }
 
         public virtual ICollection<License> Licenses { get; private set; } = new HashSet<License>();
@@ -34,14 +34,14 @@ namespace DVLD_Domain.Models
         }
 
 
-        public Driver(int personID, int createdByUserID)
+        public Driver(int Id, int? createdbyuserid)
         {
-            if (personID <= 0)
-                throw new ArgumentException("PersonID must be a positive integer.", nameof(personID));
-            if (createdByUserID <= 0)
-                throw new ArgumentException("CreatedByUserID must be a positive integer.", nameof(createdByUserID));
-            PersonID = personID;
-            CreatedByUserID = createdByUserID;
+            if (Id <= 0)
+                throw new ArgumentException("Id must be a positive integer.", nameof(Id));
+            if (createdbyuserid <= 0)
+                throw new ArgumentException("createdbyuserid must be a positive integer.", nameof(createdbyuserid));
+            Id = Id;
+            createdbyuserid = createdbyuserid;
             CreatedDate = DateTime.UtcNow;
         }
     }

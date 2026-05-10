@@ -7,7 +7,7 @@ namespace DVLD_Domain.Models
     public class User
     {
         [Key, ForeignKey("Person")]
-        public int PersonID { get; private set; }
+        public int Id { get; private set; }
 
         [Required]
         [MaxLength(100)]
@@ -19,7 +19,7 @@ namespace DVLD_Domain.Models
         public bool IsActive { get; private set; }
 
         public DateTime CreatedAt { get; private set; }
-        public int CreatedByUserId { get; private set; }
+        public int? createdbyuserid { get; private set; }
 
         public DateTime? UpdatedAt { get; private set; } 
         public int? UpdatedByUserId { get; private set; } 
@@ -28,19 +28,19 @@ namespace DVLD_Domain.Models
 
         private User() { }
 
-        public User(int personId, string userName, string passwordHash, int createdByUserId)
+        public User(int Id, string userName, string passwordHash, int? createdbyuserid)
         {
-            if (personId <= 0) throw new ArgumentException("Invalid PersonID");
+            if (Id <= 0) throw new ArgumentException("Invalid Id");
             if (string.IsNullOrWhiteSpace(userName)) throw new ArgumentException("UserName is required");
             if (string.IsNullOrWhiteSpace(passwordHash)) throw new ArgumentException("PasswordHash is required");
 
-            PersonID = personId;
+            Id = Id;
             UserName = userName;
             PasswordHash = passwordHash;
             IsActive = true;
 
             CreatedAt = DateTime.UtcNow;
-            CreatedByUserId = createdByUserId;
+            createdbyuserid = createdbyuserid;
         }
 
         public void Deactivate(int updatedByUserId)

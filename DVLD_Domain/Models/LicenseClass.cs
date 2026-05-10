@@ -89,7 +89,7 @@ namespace DVLD_Domain.Models
         }
 
 
-        public LicenseClass(string className, string classDescription, byte minimumAllowedAge, byte defaultValidityLength, decimal classFees,int createdbyuserid):base(createdbyuserid) 
+        public LicenseClass(string className, string classDescription, byte minimumAllowedAge, byte defaultValidityLength, decimal classFees,int? createdbyuserid):base(createdbyuserid) 
         {
             if(createdbyuserid <= 0)
                 throw new ArgumentException("Created by user ID must be greater than zero.", nameof(createdbyuserid));

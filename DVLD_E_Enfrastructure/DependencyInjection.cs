@@ -8,6 +8,7 @@ using DVLD_Application.Services.Interfaces.Licenses.Detain;
 using DVLD_Application.Services.Interfaces.Licenses.International;
 using DVLD_Application.Services.Interfaces.Licenses.Local;
 using DVLD_Application.Services.Interfaces.Password;
+using DVLD_Application.Services.Interfaces.Reports;
 using DVLD_Application.Services.Interfaces.Tests;
 using DVLD_E_Enfrastructure.Data;
 using DVLD_E_Enfrastructure.Service.Implementaions.Applicaion;
@@ -20,6 +21,7 @@ using DVLD_E_Enfrastructure.Service.Implementaions.License.Detain;
 using DVLD_E_Enfrastructure.Service.Implementaions.License.International;
 using DVLD_E_Enfrastructure.Service.Implementaions.License.Local;
 using DVLD_E_Enfrastructure.Service.Implementaions.Password;
+using DVLD_E_Enfrastructure.Service.Implementaions.Reports;
 using DVLD_E_Enfrastructure.Service.Implementaions.Test;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -56,6 +58,7 @@ namespace DVLD_E_Enfrastructure
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<ITestTypeService, TestTypeService>(); 
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IReportService, ReportService>();
 
             return services;
         }

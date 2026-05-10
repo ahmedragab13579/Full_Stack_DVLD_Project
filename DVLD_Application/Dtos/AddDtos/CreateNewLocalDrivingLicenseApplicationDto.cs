@@ -14,8 +14,8 @@ namespace DVLD_Application.Dtos.AddDtos
         [Range(1, int.MaxValue, ErrorMessage = "ApplicationID must be a positive integer.")]
         public int ApplicationID { get;  set; }
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "PersonID must be a positive integer.")]
-        public int PersonID { get;  set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive integer.")]
+        public int Id { get;  set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "LicenseClassID must be a positive integer.")]

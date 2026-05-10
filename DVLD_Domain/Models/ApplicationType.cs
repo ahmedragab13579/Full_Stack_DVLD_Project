@@ -11,9 +11,6 @@ namespace DVLD_Domain.Models
 {
     public class ApplicationType:BaseEntity
     {
-        [Key]
-        public int Id { get;private set; } 
-
         [Required]
         [MaxLength(150)]
         public string Title { get; private set; }
@@ -27,7 +24,7 @@ namespace DVLD_Domain.Models
             
         }
 
-        public ApplicationType(string title, decimal fees,int createdbyuserid):base(createdbyuserid)
+        public ApplicationType(string title, decimal fees,int? createdbyuserid):base(createdbyuserid)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title cannot be null or empty.", nameof(title));

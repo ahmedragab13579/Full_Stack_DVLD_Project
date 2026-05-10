@@ -127,9 +127,9 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
             }
         }
 
-        public async Task<Result<bool>> HasActiveApplicationForClassAsync(int personId, int licenseClassId)
+        public async Task<Result<bool>> HasActiveApplicationForClassAsync(int Id, int licenseClassId)
         {
-            if (personId <= 0 || licenseClassId <= 0)
+            if (Id <= 0 || licenseClassId <= 0)
                 return Result<bool>.Failure("Invalid input.", "INVALID_INPUT");
 
             try
@@ -138,7 +138,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
 
                 var exists = await _context.Applications
                     .AsNoTracking()
-                    .Where(a => a.PersonID == personId && activeStatuses.Contains(a.Status))
+                    .Where(a => a.Id == Id && activeStatuses.Contains(a.Status))
                     .Join(_context.LocalDrivingLicenseApplications.AsNoTracking(),
                           a => a.Id,
                           ldla => ldla.ApplicationID,
@@ -149,7 +149,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "HasActiveApplicationForClassAsync failed for PersonId {PersonId} LicenseClassId {LicenseClassId}", personId, licenseClassId);
+                _logger.LogError(ex, "HasActiveApplicationForClassAsync failed for Id {Id} LicenseClassId {LicenseClassId}", Id, licenseClassId);
                 return Result<bool>.Failure("An unexpected error occurred.", "ERROR");
             }
         }
@@ -162,7 +162,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
             var currentUserId = _currentUserService.GetCurrentUserId();
             if(!currentUserId.HasValue) return Result<int>.Failure("Current User Not Found");
 
-            if (dto.PersonID <= 0)
+            if (dto.Id <= 0)
                 return Result<int>.Failure("Invalid ids.", "INVALID_INPUT");
             if (dto.ApplicationID <= 0 || dto.LicenseClassID <= 0)
                 return Result<int>.Failure("Invalid application data.", "INVALID_INPUT");
@@ -175,7 +175,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
                 if (application == null)
                     return Result<int>.Failure("Related application not found.", "NOT_FOUND");
 
-                if (application.PersonID != dto.PersonID)
+                if (application.Id != dto.Id)
                     return Result<int>.Failure("Application does not belong to specified person.", "FORBIDDEN");
 
                 var alreadyExists = await _context.LocalDrivingLicenseApplications

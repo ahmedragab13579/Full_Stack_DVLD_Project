@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<div class="bg-dvld-gray/20 rounded-3xl p-8 mb-8 border border-white/5 flex items-center justify-between shadow-sm">
+    <div>
+        <div class="flex items-center gap-2 mb-2">
+            <span class="h-1 w-8 rounded-full bg-dvld-teal"></span>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Record Review</p>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight">Appointment Details</h1>
+    </div>
+    <a asp-controller="Home" asp-action="Index"
+       class="flex items-center gap-2 px-6 py-2.5 rounded-xl border border-slate-700 text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Dashboard
+    </a>
+</div>
+
+<div class="space-y-6">
+    <partial name="_ObjectDetails" model="Model" />
+</div>

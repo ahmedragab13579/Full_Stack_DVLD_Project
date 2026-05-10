@@ -10,13 +10,13 @@ namespace DVLD_Application.Services.Interfaces.Humans.Driver
     {
         Task<Result<DriverDto>> GetDriverByIdAsync(int driverId);
 
-        Task<Result<DriverDto>> GetDriverByPersonIdAsync(int personId);
+        Task<Result<DriverDto>> GetDriverByPersonIDAsync(int Id);
 
         Task<Result<DriverDto>> GetDriverByNationalNoAsync(string nationalNo);
 
         Task<Result < List<DriverDto>>> GetAllDriversAsync();
 
-        Task<Result<bool>> IsPersonDriverAsync(int personId);
+        Task<Result<bool>> IsPersonDriverAsync(int Id);
 
         Task<Result<int>> CreateDriverAsync(CreateNewDriverDto dto);
     }

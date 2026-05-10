@@ -68,13 +68,16 @@ namespace DVLD_E_Enfrastructure.Data
 
 
             modelBuilder.Entity<Person>()
-                .HasOne(p=>p.User)
-                .WithOne(u=>u.Person)
-                .HasForeignKey<User>(User=> User.PersonID);
+                .HasOne(p => p.User)
+                .WithOne(u => u.Person)
+                .HasForeignKey<User>(u => u.Id);
+
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.Driver)
                 .WithOne(d => d.Person)
-                .HasForeignKey<Driver>(d => d.PersonID);
+                .HasForeignKey<Driver>(d => d.Id);
+
+
             modelBuilder.Entity<Application>()
                 .HasOne(a=>a.LocalDrivingLicenseApplication)
                 .WithOne(ldla=>ldla.Application)

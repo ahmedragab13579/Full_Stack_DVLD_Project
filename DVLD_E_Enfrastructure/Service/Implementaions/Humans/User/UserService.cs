@@ -105,7 +105,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.User
             {
                 return Result<int>.Failure("Username already exists.");
             }
-            if (await _context.Users.AnyAsync(u => u.PersonID == dto.PersonID))
+            if (await _context.Users.AnyAsync(u => u.Id == dto.Id))
             {
                 return Result<int>.Failure("User already exists for this person.");
             }
@@ -116,11 +116,11 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.User
             try
             {
                 var passwordHash = _passwordService.HashPassword(dto.Password);
-                var user = new DVLD_Domain.Models.User(dto.PersonID, dto.UserName, passwordHash, currentUserId.Value);
+                var user = new DVLD_Domain.Models.User(dto.Id, dto.UserName, passwordHash, currentUserId.Value);
                 
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
-                return Result<int>.Success(user.PersonID);
+                return Result<int>.Success(user.Id);
             }
             catch (Exception ex)
             {
@@ -177,21 +177,21 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.User
 
         public async Task<Result<UserDto>> GetUserByIdAsync(int userId)
         {
-            var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.PersonID == userId);
+            var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null) return Result<UserDto>.Failure("User not found.");
             
             var dto = _mapper.Map<UserDto>(user);
             return Result<UserDto>.Success(dto);
         }
 
-        public async Task<Result<UserDto>> GetUserByPersonIdAsync(int personId)
+        public async Task<Result<UserDto>> GetUserByPersonIDAsync(int Id)
         {
-             return await GetUserByIdAsync(personId);
+             return await GetUserByPersonIDAsync(Id);
         }
 
-        public async Task<Result<bool>> IsPersonUserAsync(int personId)
+        public async Task<Result<bool>> IsPersonUserAsync(int Id)
         {
-            var exists = await _context.Users.AnyAsync(u => u.PersonID == personId);
+            var exists = await _context.Users.AnyAsync(u => u.Id == Id);
             return Result<bool>.Success(exists);
         }
 
@@ -206,7 +206,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.User
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return Result<bool>.Failure("User not found.");
 
-            if (await _context.Users.AnyAsync(u => u.UserName == newUserName && u.PersonID != userId))
+            if (await _context.Users.AnyAsync(u => u.UserName == newUserName && u.Id != userId))
             {
                 return Result<bool>.Failure("Username already taken.");
             }

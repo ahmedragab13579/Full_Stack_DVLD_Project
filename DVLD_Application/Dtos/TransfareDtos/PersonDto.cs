@@ -12,7 +12,7 @@ namespace DVLD_Application.Dtos.TransfareDtos
     public class PersonDto : BaseEntityDto
     {
         [Key]
-        public int PersonID { get;  set; }
+        public int Id { get;  set; }
 
         [Required]
         [MaxLength(20)]

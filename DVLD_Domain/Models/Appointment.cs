@@ -68,7 +68,7 @@ namespace DVLD_Domain.Models
         }
   
         
-        public Appointment(int testTypeID, int localDrivingLicenseApplicationID, DateTime appointmentDate, decimal paidFees, int createdByUserId) : base(createdByUserId)
+        public Appointment(int testTypeID, int localDrivingLicenseApplicationID, DateTime appointmentDate, decimal paidFees, int? createdbyuserid) : base(createdbyuserid)
         {
             if (testTypeID <= 0)
                 throw new ArgumentException("TestTypeID must be a positive integer.", nameof(testTypeID));
@@ -76,8 +76,8 @@ namespace DVLD_Domain.Models
                 throw new ArgumentException("LocalDrivingLicenseApplicationID must be a positive integer.", nameof(localDrivingLicenseApplicationID));
             if (paidFees < 0)
                 throw new ArgumentException("PaidFees cannot be negative.", nameof(paidFees));
-            if(createdByUserId<0)
-                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
+            if(createdbyuserid<0)
+                throw new ArgumentException("createdbyuserid must be a positive integer.", nameof(createdbyuserid));
             if(appointmentDate < DateTime.UtcNow)
                 throw new ArgumentException("AppointmentDate cannot be in the past.", nameof(appointmentDate));
             TestTypeID = testTypeID;

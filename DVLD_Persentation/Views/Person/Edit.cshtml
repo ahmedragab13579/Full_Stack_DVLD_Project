@@ -1,0 +1,98 @@
+@using DVLD_Domain.Enums
+@model DVLD_Application.Dtos.TransfareDtos.PersonDto
+@{
+    ViewData["Title"] = "Edit Person Profile";
+}
+
+<div class="max-w-4xl mx-auto">
+    <form asp-action="Edit" method="post" class="bg-dvld-gray/30 rounded-[2.5rem] p-10 border border-white/5 shadow-2xl backdrop-blur-sm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-10 flex items-center justify-between border-b border-white/5 pb-6">
+            <div>
+                <h2 class="text-3xl font-extrabold text-white tracking-tight">Edit Information</h2>
+                <p class="text-sm text-slate-400 mt-2 font-medium">Modify existing profile details in the system.</p>
+            </div>
+            <div class="h-14 w-14 rounded-2xl bg-dvld-teal/10 flex items-center justify-center text-dvld-teal shadow-inner">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            </div>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="mb-8 rounded-2xl bg-red-500/10 border border-red-500/20 p-5 text-sm text-red-400"></div>
+
+        <div class="grid gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">First Name</label>
+                    <input name="FirstName" value="@Model.FirstName" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Second Name</label>
+                    <input name="SecondName" value="@Model.SecondName" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Third Name</label>
+                    <input name="ThirdName" value="@Model.ThirdName" class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Last Name</label>
+                    <input name="LastName" value="@Model.LastName" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">National Number</label>
+                    <input name="NationalNo" value="@Model.NationalNo" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Date of Birth</label>
+                    <input name="DateOfBirth" type="date" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Gender</label>
+                    <select name="Gender" class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3.5 text-sm text-white outline-none focus:border-dvld-teal appearance-none cursor-pointer">
+                        <!option value="0" @(Model.Gender == Gender.Male ? "selected" : "")>Male</!option>
+                        <!option value="1" @(Model.Gender == Gender.Female ? "selected" : "")>Female</!option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Nationality</label>
+                    <select name="CountryID" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3.5 text-sm text-white outline-none focus:border-dvld-teal appearance-none cursor-pointer">
+                        @if (ViewBag.Countries != null)
+                        {
+                            foreach (var country in ViewBag.Countries)
+                            {
+                                <!option value="@country.Id" @(Model.NationalityCountryID == country.Id ? "selected" : "")>@country.Name</!option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Phone Number</label>
+                    <input name="Phone" value="@Model.Phone" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Email Address</label>
+                    <input name="Email" type="email" value="@Model.Email" class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal" />
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 ml-1">Address</label>
+                <textarea name="Address" rows="3" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-dvld-teal">@Model.Address</textarea>
+            </div>
+        </div>
+
+        <div class="mt-12 flex items-center justify-end gap-6 border-t border-white/5 pt-8">
+            <a asp-action="Details" asp-route-id="@Model.Id" class="text-sm font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors px-6">Cancel</a>
+            <button type="submit" class="bg-dvld-teal hover:bg-dvld-teal/90 text-dvld-dark font-black px-12 py-4 rounded-2xl text-sm uppercase tracking-widest transition-all shadow-xl shadow-dvld-teal/20">
+                Update Profile
+            </button>
+        </div>
+    </form>
+</div>

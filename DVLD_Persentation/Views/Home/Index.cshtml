@@ -1,15 +1,221 @@
-@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    ViewData["Title"] = "System Overview";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to DVLD System</h1>
-    <p>The Driving and Vehicle License Department (DVLD) API is running.</p>
-    <p>
-        <a href="/swagger" class="btn btn-primary">Open API Documentation (Swagger)</a>
-    </p>
-    <hr />
-    <div class="alert alert-success" role="alert">
-        <strong>System Status:</strong> Online
+<div class="grid gap-6 md:grid-cols-4 mb-8">
+    <div class="dvld-card bg-gradient-to-br from-slate-800 to-dvld-gray border-l-4 border-dvld-teal">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total Applications</p>
+        <p class="text-3xl font-bold text-white mt-1">1,284</p>
+        <div class="mt-2 flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
+            <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            +12% vs last month
+        </div>
+    </div>
+    <div class="dvld-card bg-gradient-to-br from-slate-800 to-dvld-gray border-l-4 border-amber-500">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Pending Tests</p>
+        <p class="text-3xl font-bold text-white mt-1">42</p>
+        <div class="mt-2 flex items-center gap-1 text-[10px] text-slate-500 font-bold">
+            Currently in queue
+        </div>
+    </div>
+    <div class="dvld-card bg-gradient-to-br from-slate-800 to-dvld-gray border-l-4 border-emerald-500">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Licenses Issued</p>
+        <p class="text-3xl font-bold text-white mt-1">856</p>
+        <div class="mt-2 flex items-center gap-1 text-[10px] text-emerald-400 font-bold">
+            98% Approval Rate
+        </div>
+    </div>
+    <div class="dvld-card bg-gradient-to-br from-slate-800 to-dvld-gray border-l-4 border-dvld-teal">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Revenue</p>
+        <p class="text-3xl font-bold text-white mt-1">$12.4k</p>
+        <div class="mt-2 flex items-center gap-1 text-[10px] text-slate-500 font-bold">
+            Monthly target: $15k
+        </div>
     </div>
 </div>
+
+<!-- Phase 3: Charts & Analytics -->
+<div class="grid gap-6 md:grid-cols-2 mb-6">
+    <div class="dvld-card">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-white">Application Status Distribution</h3>
+            <svg class="h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+        </div>
+        <div class="h-48 flex items-center justify-center">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+    <div class="dvld-card">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-white">Monthly Application Trends</h3>
+            <svg class="h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+        </div>
+        <div class="h-48 flex items-center justify-center">
+            <canvas id="trendsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-3">
+    <!-- Quick Access -->
+    <div class="lg:col-span-2 grid gap-4 md:grid-cols-2">
+        <a asp-controller="Application" asp-action="LocalIndex" class="dvld-card group block hover:border-dvld-teal/50 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-dvld-teal transition-colors">Applications</p>
+                    <p class="mt-1 text-xl font-bold text-dvld-light">Manage Workflows</p>
+                    <p class="mt-2 text-xs text-slate-500">Handle local and international license requests.</p>
+                </div>
+                <div class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-600 group-hover:text-dvld-teal transition-colors">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+            </div>
+        </a>
+        <a asp-controller="Appointment" asp-action="Index" class="dvld-card group block hover:border-dvld-teal/50 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-dvld-teal transition-colors">Appointments</p>
+                    <p class="mt-1 text-xl font-bold text-dvld-light">Schedule Tests</p>
+                    <p class="mt-2 text-xs text-slate-500">Manage driving and vision test bookings.</p>
+                </div>
+                <div class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-600 group-hover:text-dvld-teal transition-colors">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+            </div>
+        </a>
+        <a asp-controller="Person" asp-action="Index" class="dvld-card group block hover:border-dvld-teal/50 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-dvld-teal transition-colors">People</p>
+                    <p class="mt-1 text-xl font-bold text-dvld-light">Profiles</p>
+                    <p class="mt-2 text-xs text-slate-500">Search and manage personal information records.</p>
+                </div>
+                <div class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-600 group-hover:text-dvld-teal transition-colors">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+            </div>
+        </a>
+        <a asp-controller="User" asp-action="Index" class="dvld-card group block hover:border-dvld-teal/50 transition-all duration-300">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-dvld-teal transition-colors">Admin</p>
+                    <p class="mt-1 text-xl font-bold text-dvld-light">Users & Access</p>
+                    <p class="mt-2 text-xs text-slate-500">Configure system users, roles, and permissions.</p>
+                </div>
+                <div class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center text-slate-600 group-hover:text-dvld-teal transition-colors">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="dvld-card flex flex-col h-full">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-white">Recent Activity</h3>
+            <button class="text-[10px] font-bold uppercase tracking-widest text-dvld-teal hover:underline">View All</button>
+        </div>
+        
+        <div class="flex-1 space-y-6 overflow-y-auto">
+            <div class="flex gap-4">
+                <div class="h-8 w-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs text-dvld-light">Application <span class="font-bold text-white">#1024</span> was approved</p>
+                    <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold">2 mins ago</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="h-8 w-8 rounded-full bg-dvld-teal/10 flex items-center justify-center text-dvld-teal shrink-0">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs text-dvld-light">New test appointment for <span class="font-bold text-white">Ahmed Ragab</span></p>
+                    <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold">1 hour ago</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </div>
+                <div>
+                    <p class="text-xs text-dvld-light">Application <span class="font-bold text-white">#1019</span> was rejected</p>
+                    <p class="text-[10px] text-slate-500 mt-1 uppercase font-bold">4 hours ago</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-700">
+             <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                 <span>Queue Processing</span>
+                 <span>72%</span>
+             </div>
+             <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                 <div id="queueBar" class="h-full bg-dvld-teal transition-all duration-500 shadow-[0_0_10px_rgba(0,173,181,0.5)]" style="width: 72%"></div>
+             </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // إعداد الألوان الافتراضية للنصوص
+            Chart.defaults.color = 'rgba(238, 238, 238, 0.5)';
+            
+            // إصلاح الخطأ: تم حذف الـ backslashes التي كانت تسبب "Unrecognized escape sequence"
+            Chart.defaults.font.family = "'Inter', sans-serif";
+
+            // Status Doughnut Chart
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Pending', 'Rejected'],
+                    datasets: [{
+                        data: [450, 120, 30],
+                        backgroundColor: ['#00ADB5', '#f59e0b', '#ef4444'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 10, padding: 20, font: { size: 10 } }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Monthly Trends Bar Chart
+            new Chart(document.getElementById('trendsChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Applications',
+                        data: [65, 59, 80, 81, 56, 95],
+                        backgroundColor: 'rgba(0, 173, 181, 0.2)',
+                        borderColor: '#00ADB5',
+                        borderWidth: 2,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+    </script>
+}

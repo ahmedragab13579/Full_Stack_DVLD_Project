@@ -11,8 +11,8 @@ namespace DVLD_Application.Dtos.TransfareDtos
 {
     public class ApplicationDto:BaseEntityDto
     {
-        public int PersonID { get;  set; } 
-        [ForeignKey("PersonID")]
+        public int Id { get;  set; } 
+        [ForeignKey("Id")]
         public DateTime ApplicationDate { get;  set; } 
         public int ApplicationTypeID { get;  set; } 
         [ForeignKey("ApplicationTypeID")]

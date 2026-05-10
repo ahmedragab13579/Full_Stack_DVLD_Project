@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Search Driver";
+}
+
+<form method="post" class="rounded border border-slate-700 bg-slate-900/60 p-5">
+    @Html.AntiForgeryToken()
+    <h2 class="mb-4 text-xl font-semibold text-[#EEEEEE]">Search Driver by National Number</h2>
+    <div asp-validation-summary="ModelOnly" class="mb-3 text-sm text-red-300"></div>
+    <input name="nationalNo" placeholder="National Number" class="w-full rounded border border-slate-600 bg-slate-950 px-3 py-2 text-sm" required />
+    <button class="mt-4 rounded bg-[#00ADB5] px-4 py-2 font-semibold text-[#222831]" type="submit">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

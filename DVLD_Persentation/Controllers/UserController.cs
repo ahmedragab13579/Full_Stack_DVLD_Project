@@ -1,135 +1,197 @@
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.TransfareDtos;
+using DVLD_Application.Services.Interfaces.Humans.Person;
 using DVLD_Application.Services.Interfaces.Humans.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/users")]
-    [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IPersonService _personService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IPersonService personService)
         {
             _userService = userService;
+            _personService = personService;
         }
 
-        /// <summary>
-        /// Retrieves a list of all users.
-        /// </summary>
-        /// <returns>A list of users.</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        // GET: /User/Index
+        public async Task<IActionResult> Index()
         {
             var results = await _userService.GetAllUsersAsync();
-            var users = results.Select(r => r.Data).ToList();
-            return Ok(users);
+            var users = results.Select(r => r.Data).Where(d => d != null).ToList();
+            return View(users);
         }
 
-        /// <summary>
-        /// Retrieves a user by their ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the user.</param>
-        /// <returns>The user details if found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
+        // GET: /User/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _userService.GetUserByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Creates a new user.
-        /// </summary>
-        /// <param name="dto">The data to create the user.</param>
-        /// <returns>The ID of the created user.</returns>
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CreateNewUserDto dto)
+        // GET: /User/Create
+        public IActionResult Create(int? Id)
         {
+            ViewBag.Id = Id;
+            return View();
+        }
+
+        // POST: /User/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateNewUserDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            // Verify that the specified Person exists before creating the user
+            var personExistsResult = await _personService.IsPersonExistAsync(dto.Id);
+            if (!personExistsResult.IsSuccess || !personExistsResult.Data)
+            {
+                ModelState.AddModelError(string.Empty, "Person not found. Please provide a valid Person ID.");
+                return View(dto);
+            }
+
             var result = await _userService.CreateUserAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetUserById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "User created successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Changes the password for a user.
-        /// </summary>
-        /// <param name="id">The ID of the user.</param>
-        /// <param name="dto">The password change details.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}/password")]
-        public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordDto dto)
-        {   
+        // GET: /User/ChangePassword/5
+        public IActionResult ChangePassword(int id)
+        {
+            ViewBag.UserId = id;
+            return View();
+        }
+
+        // POST: /User/ChangePassword/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(int id, ChangePasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.UserId = id;
+                return View(dto);
+            }
+
             var result = await _userService.ChangePasswordAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                ViewBag.UserId = id;
+                return View(dto);
             }
-            return Ok("Password changed successfully.");
+
+            TempData["Success"] = "Password changed successfully.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        /// <summary>
-        /// Updates the username of a user.
-        /// </summary>
-        /// <param name="id">The ID of the user.</param>
-        /// <param name="newUserName">The new username.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}/username")]
-        public async Task<IActionResult> UpdateUserName(int id, [FromBody] string newUserName)
+        // GET: /User/EditUsername/5
+        public async Task<IActionResult> EditUsername(int id)
         {
+            var result = await _userService.GetUserByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            ViewBag.UserId = id;
+            return View();
+        }
+
+        // POST: /User/EditUsername/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUsername(int id, string newUserName)
+        {
+            if (string.IsNullOrWhiteSpace(newUserName))
+            {
+                ModelState.AddModelError(string.Empty, "Username is required.");
+                ViewBag.UserId = id;
+                return View();
+            }
+
             var result = await _userService.UpdateUserNameAsync(id, newUserName);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                ViewBag.UserId = id;
+                return View();
             }
-            return Ok("Username updated successfully.");
+
+            TempData["Success"] = "Username updated successfully.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        /// <summary>
-        /// Activates or Deactivates a user.
-        /// </summary>
-        /// <param name="id">The ID of the user.</param>
-        /// <param name="isActive">The new activation status.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}/activation")]
-        public async Task<IActionResult> UpdateActivation(int id, [FromBody] bool isActive)
+        // POST: /User/UpdateActivation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateActivation(int id, bool isActive)
         {
             if (isActive)
             {
                 var result = await _userService.ActivateUserAsync(id);
-                if (!result.IsSuccess) return BadRequest(result.Message);
+                if (!result.IsSuccess)
+                {
+                    TempData["Error"] = result.Message;
+                    return RedirectToAction(nameof(Details), new { id });
+                }
             }
             else
             {
                 var result = await _userService.DeactivateUserAsync(id);
-                if (!result.IsSuccess) return BadRequest(result.Message);
+                if (!result.IsSuccess)
+                {
+                    TempData["Error"] = result.Message;
+                    return RedirectToAction(nameof(Details), new { id });
+                }
             }
-            return Ok($"User {(isActive ? "activated" : "deactivated")} successfully.");
+
+            TempData["Success"] = $"User {(isActive ? "activated" : "deactivated")} successfully.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        /// <summary>
-        /// Deletes a user by their ID.
-        /// </summary>
-        /// <param name="id">The ID of the user to delete.</param>
-        /// <returns>A success message.</returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        // GET: /User/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _userService.GetUserByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            return View(result.Data);
+        }
+
+        // POST: /User/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var result = await _userService.DeleteUserAsync(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Delete), new { id });
             }
-            return Ok("User deleted successfully.");
+
+            TempData["Success"] = "User deleted successfully.";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

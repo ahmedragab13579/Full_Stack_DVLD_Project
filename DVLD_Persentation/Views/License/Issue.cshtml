@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Issue License";
+}
+
+<form method="post" class="rounded border border-slate-700 bg-slate-900/60 p-5">
+    @Html.AntiForgeryToken()
+    <h2 class="mb-4 text-xl font-semibold text-[#EEEEEE]">Issue Local License</h2>
+    <div asp-validation-summary="ModelOnly" class="mb-3 text-sm text-red-300"></div>
+    <div class="grid gap-3 md:grid-cols-2">
+    <input name="ApplicationID" type="number" min="1" placeholder="Application ID" class="rounded border border-slate-600 bg-slate-950 px-3 py-2 text-sm" required />
+    <input name="DriverID" type="number" min="1" placeholder="Driver ID" class="rounded border border-slate-600 bg-slate-950 px-3 py-2 text-sm" required />
+    <input name="LicenseClassID" type="number" min="1" placeholder="License Class ID" class="rounded border border-slate-600 bg-slate-950 px-3 py-2 text-sm" required />
+    <input name="Fees" type="number" step="0.01" min="0" placeholder="Fees" class="rounded border border-slate-600 bg-slate-950 px-3 py-2 text-sm" />
+</div>
+<textarea name="Notes" rows="3" placeholder="Notes" class="mt-3 w-full rounded border border-slate-600 bg-slate-950 px-3 py-2 text-sm"></textarea>
+    <button class="mt-4 rounded bg-[#00ADB5] px-4 py-2 font-semibold text-[#222831]" type="submit">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

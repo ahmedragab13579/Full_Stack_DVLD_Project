@@ -18,7 +18,7 @@ namespace DVLD_Application.Services.Interfaces.Applications
 
         Task<Result<bool>> IsLicenseIssuedAsync(int localAppId);
 
-        Task<Result<bool>> HasActiveApplicationForClassAsync(int personId, int licenseClassId);
+        Task<Result<bool>> HasActiveApplicationForClassAsync(int Id, int licenseClassId);
 
 
        

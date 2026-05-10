@@ -35,7 +35,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
 
         public async Task<Result<int>> AddAsync(CreateNewApplicationDto dto)
         {
-            var IsThePersonHasActiveApp = await IsPersonHasActiveApplicationAsync(dto.PersonID, dto.ApplicationTypeID);
+            var IsThePersonHasActiveApp = await IsPersonHasActiveApplicationAsync(dto.Id, dto.ApplicationTypeID);
             if (IsThePersonHasActiveApp.Data)
                 return Result<int>.Failure("Person already has an active application of this type", "ACTIVE_APPLICATION_EXISTS");
 
@@ -44,7 +44,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
 
             try
             {
-                var app = new Application(dto.PersonID, dto.ApplicationTypeID, dto.Fees, currentUserId.Value);
+                var app = new Application(dto.Id, dto.ApplicationTypeID, dto.Fees, currentUserId.Value);
                 await _context.Applications.AddAsync(app);
                 await _context.SaveChangesAsync();
                 return Result<int>.Success(app.Id, "Added successfully");
@@ -107,10 +107,10 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Applicaion
             return Result<ApplicationDto>.Success(app);
         }
 
-        public async Task<Result<bool>> IsPersonHasActiveApplicationAsync(int personId, int appTypeId)
+        public async Task<Result<bool>> IsPersonHasActiveApplicationAsync(int Id, int appTypeId)
         {
             bool hasActive = await _context.Applications
-                .AnyAsync(a => a.PersonID == personId &&
+                .AnyAsync(a => a.Id == Id &&
                                a.ApplicationTypeID == appTypeId &&
                                (a.Status == ApplicationStatus.New || a.Status == ApplicationStatus.InProgress));
 

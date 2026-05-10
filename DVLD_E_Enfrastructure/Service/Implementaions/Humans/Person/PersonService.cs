@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.TransfareDtos;
@@ -36,8 +36,8 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Person
                 return Result<int>.Failure("Person with this National No already exists.");
             }
 
-            var currentUserId = _currentUserService.GetCurrentUserId();
-            if(!currentUserId.HasValue) return Result<int>.Failure("Current User Not Found");
+            //var currentUserId = _currentUserService.GetCurrentUserId();
+            //if(!currentUserId.HasValue) return Result<int>.Failure("Current User Not Found");
 
             try
             {
@@ -53,14 +53,13 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Person
                     dto.ThirdName,
                     dto.Email,
                     dto.Address,
-                    dto.ImagePath,
-                    currentUserId.Value
+                    dto.ImagePath
                 );
 
                 await _context.Persons.AddAsync(person);
                 await _context.SaveChangesAsync();
 
-                return Result<int>.Success(person.PersonID);
+                return Result<int>.Success(person.Id);
             }
             catch (Exception ex)
             {
@@ -68,9 +67,9 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Person
             }
         }
 
-        public async Task<Result<bool>> DeletePersonAsync(int personId)
+        public async Task<Result<bool>> DeletePersonAsync(int Id)
         {
-            var person = await _context.Persons.FindAsync(personId);
+            var person = await _context.Persons.FindAsync(Id);
             if (person == null)
             {
                 return Result<bool>.Failure("Person not found.");
@@ -95,6 +94,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Person
         public async Task<Result<List<PersonDto>>> GetAllPeopleAsync()
         {
             var dtos = await _context.Persons
+                .Include(p => p.User)
                 .AsNoTracking()
                 .ProjectTo<PersonDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
@@ -102,12 +102,13 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Person
             return Result<List<PersonDto>>.Success(dtos);
         }
 
-        public async Task<Result<PersonDto>> GetPersonByIdAsync(int personId)
+        public async Task<Result<PersonDto>> GetPersonByIdAsync(int Id)
         {
             var person = await _context.Persons
                 .Include(p => p.NationalityCountry)
+                .Include(p => p.User)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.PersonID == personId);
+                .FirstOrDefaultAsync(p => p.Id == Id);
 
             if (person == null)
             {
@@ -140,9 +141,9 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Person
             return Result<bool>.Success(exists);
         }
 
-        public async Task<Result<bool>> IsPersonExistAsync(int personId)
+        public async Task<Result<bool>> IsPersonExistAsync(int Id)
         {
-             var exists = await _context.Persons.AnyAsync(p => p.PersonID == personId);
+             var exists = await _context.Persons.AnyAsync(p => p.Id == Id);
              return Result<bool>.Success(exists);
         }
 

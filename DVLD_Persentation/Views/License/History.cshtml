@@ -1,0 +1,49 @@
+@model IEnumerable<object>
+
+@{
+    ViewData["Title"] = "License History";
+}
+
+<div class="mb-8 flex items-center justify-between">
+    <div>
+        <h2 class="text-2xl font-bold text-white">License History</h2>
+        <p class="text-slate-400">Viewing all license records associated with Person ID #@ViewBag.Id</p>
+    </div>
+    <a asp-controller="Person" asp-action="Index" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-dvld-teal transition-all">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Profiles
+    </a>
+</div>
+
+<div class="grid gap-8">
+    <!-- Local Licenses -->
+    <div>
+        <div class="flex items-center gap-3 mb-4">
+            <div class="h-8 w-8 rounded-lg bg-dvld-teal/10 flex items-center justify-center text-dvld-teal">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-white">Local Driving Licenses</h3>
+        </div>
+        
+        @{
+            var localRows = Model is IEnumerable<object> data
+                ? data.ToList()
+                : new List<object>();
+        }
+        <partial name="_ObjectTable" model="localRows" />
+    </div>
+
+    <!-- International Licenses -->
+    <div>
+        <div class="flex items-center gap-3 mb-4">
+            <div class="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9-9c1.657 0 3 4.03 3 9s-1.343 9-3 9m0-18c-1.657 0-3 4.03-3 9s1.343 9 3 9m-9-9a9 9 0 019-9"></path></svg>
+            </div>
+            <h3 class="text-sm font-bold uppercase tracking-widest text-white">International Permits</h3>
+        </div>
+        
+        <div class="dvld-card text-center py-12 border-dashed">
+            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">No international permits issued for this driver</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@model object
+
+@if (Model == null)
+{
+    <div class="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-700 bg-dvld-gray/20 p-12 text-center">
+        <svg class="mb-4 h-12 w-12 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-sm font-medium text-slate-400">No details found for this record.</p>
+    </div>
+}
+else
+{
+    var properties = Model.GetType().GetProperties();
+
+    <!-- Container الرئيسي: زودنا الـ Padding والـ Gap -->
+    <div class="overflow-hidden rounded-3xl border border-white/5 bg-dvld-gray/30 shadow-sm">
+
+        <div class="grid gap-px bg-white/5 md:grid-cols-2">
+            @foreach (var property in properties)
+            {
+                var value = property.GetValue(Model);
+                // بنحدد لو القيمة "مهمة" نديها ستايل مختلف (مثلاً لو ID أو Name)
+
+                <div class="group bg-dvld-dark/40 p-5 transition-colors hover:bg-dvld-teal/[0.02]">
+                    <div class="flex flex-col gap-1.5">
+                        <span class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.1em] text-dvld-teal/60">
+                            <!-- أيقونة صغيرة قبل الاسم بتدي شكل فخم -->
+                            <span class="h-1 w-1 rounded-full bg-dvld-teal/40 group-hover:bg-dvld-teal"></span>
+                            @property.Name
+                        </span>
+
+                        <div class="text-sm font-medium text-slate-200">
+                            @if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
+                            {
+                                <span class="text-slate-600 italic">Not Provided</span>
+                            }
+                            else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
+                            {
+                                <span class="flex items-center gap-2">
+                                    <svg class="h-3.5 w-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    @Convert.ToDateTime(value).ToString("MMM dd, yyyy")
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="break-words">@value</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

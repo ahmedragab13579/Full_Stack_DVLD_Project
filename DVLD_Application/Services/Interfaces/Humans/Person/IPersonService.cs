@@ -9,14 +9,14 @@ namespace DVLD_Application.Services.Interfaces.Humans.Person
 {
     public interface IPersonService
     {
-        Task<Result<PersonDto>> GetPersonByIdAsync(int personId);
+        Task<Result<PersonDto>> GetPersonByIdAsync(int Id);
 
         Task<Result<PersonDto>> GetPersonByNationalNoAsync(string nationalNo);
 
         Task<Result<List<PersonDto>>> GetAllPeopleAsync();
 
         Task<Result<bool>> IsPersonExistAsync(string nationalNo);
-        Task<Result<bool>> IsPersonExistAsync(int personId);
+        Task<Result<bool>> IsPersonExistAsync(int Id);
 
 
       
@@ -26,6 +26,6 @@ namespace DVLD_Application.Services.Interfaces.Humans.Person
         Task<Result<bool>> UpdatePersonAsync(UpdatePersonDto dto);
 
       
-        Task<Result<bool>> DeletePersonAsync(int personId);
+        Task<Result<bool>> DeletePersonAsync(int Id);
     }
 }

@@ -1,0 +1,186 @@
+@{
+    ViewData["Title"] = "New Driving License Application";
+}
+
+<div class="w-full lg:w-10/12 xl:w-8/12 mx-auto px-4 sm:px-6">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-white">Application Wizard</h2>
+        <p class="text-sm text-slate-400 mt-2">Complete the following steps to submit a new driving license application.</p>
+
+        <div class="mt-10 flex items-center justify-between relative px-4">
+            <div class="absolute top-1/2 left-0 w-full h-1 bg-slate-800 -translate-y-1/2 z-0 rounded-full"></div>
+            <div id="progressLine" class="absolute top-1/2 left-0 w-0 h-1 bg-dvld-teal -translate-y-1/2 z-0 transition-all duration-500 rounded-full"></div>
+
+            <div class="wizard-step active z-10 relative" data-step="1">
+                <div class="h-12 w-12 rounded-full bg-dvld-gray border-4 border-slate-700 flex items-center justify-center text-sm font-bold transition-all duration-300">1</div>
+                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold uppercase tracking-wide text-slate-500 whitespace-nowrap">Person Info</span>
+            </div>
+            <div class="wizard-step z-10 relative" data-step="2">
+                <div class="h-12 w-12 rounded-full bg-dvld-gray border-4 border-slate-700 flex items-center justify-center text-sm font-bold transition-all duration-300">2</div>
+                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold uppercase tracking-wide text-slate-500 whitespace-nowrap">License Class</span>
+            </div>
+            <div class="wizard-step z-10 relative" data-step="3">
+                <div class="h-12 w-12 rounded-full bg-dvld-gray border-4 border-slate-700 flex items-center justify-center text-sm font-bold transition-all duration-300">3</div>
+                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-bold uppercase tracking-wide text-slate-500 whitespace-nowrap">Confirmation</span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post" id="wizardForm" class="dvld-card mt-16 shadow-2xl p-6 sm:p-8">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="mb-6 rounded-lg bg-red-500/10 border border-red-500/20 p-4 text-sm text-red-400"></div>
+
+        <div class="step-content" id="step1">
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-2">Select Applicant</h3>
+                <p class="text-sm text-slate-400">Search for the person who is applying for the license.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                <div class="relative flex-1">
+                    <input type="text" id="personSearch" placeholder="Enter National ID..." class="w-full bg-slate-800 border border-slate-700 rounded-lg py-3 pl-4 text-white focus:border-dvld-teal focus:ring-1 focus:ring-dvld-teal outline-none transition-all" />
+                </div>
+                <button type="button" class="btn-primary px-8 py-3 text-sm font-semibold">Search</button>
+            </div>
+
+            <div class="rounded-xl border border-slate-700 bg-slate-800/50 p-8 text-center">
+                <p class="text-base text-slate-400">
+                    Applicant ID:
+                    <input name="Id" type="number" class="inline-block w-32 ml-3 bg-transparent border-b-2 border-slate-600 focus:border-dvld-teal text-white text-center text-lg outline-none transition-colors" required placeholder="Enter ID" />
+                </p>
+            </div>
+        </div>
+
+        <div class="step-content hidden" id="step2">
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-2">Select License Class</h3>
+                <p class="text-sm text-slate-400">Choose the category of license the applicant is applying for.</p>
+            </div>
+
+            <div class="grid gap-4">
+                <label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Class Type</label>
+                <select name="LicenseClassID" required class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3.5 text-white text-base focus:border-dvld-teal outline-none transition-colors">
+                    <option value="">-- Select License Class --</option>
+                    @if (ViewBag.LicenseClasses != null)
+                    {
+                        foreach (var licenseClass in ViewBag.LicenseClasses)
+                        {
+                            <option value="@licenseClass.Id">@licenseClass.ClassName</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="step-content hidden" id="step3">
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-white mb-2">Submit Application</h3>
+                <p class="text-sm text-slate-400">Review the application details before final submission.</p>
+            </div>
+
+            <div class="space-y-5 rounded-xl bg-dvld-teal/5 border border-dvld-teal/20 p-8">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-400 uppercase font-bold tracking-wider">Application Type</span>
+                    <span class="text-dvld-teal font-bold text-base">New Local Driving License</span>
+                </div>
+                <div class="flex justify-between items-center text-sm pt-4 border-t border-slate-700/50">
+                    <span class="text-slate-400 uppercase font-bold tracking-wider">Fees</span>
+                    <span class="text-white font-bold text-lg">$15.00</span>
+                </div>
+                <div class="flex justify-between items-center text-sm pt-4 border-t border-slate-700/50">
+                    <span class="text-slate-400 uppercase font-bold tracking-wider">Created By</span>
+                    <span class="text-white">Current User</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 flex items-center justify-between border-t border-slate-700 pt-6">
+            <button type="button" id="prevBtn" class="invisible px-6 py-3 text-sm font-bold uppercase tracking-wider text-slate-400 hover:text-white transition-colors">Previous</button>
+            <button type="button" id="nextBtn" class="btn-primary px-10 py-3 text-sm font-semibold shadow-lg">Next Step</button>
+            <button type="submit" id="submitBtn" class="hidden btn-primary px-10 py-3 text-sm font-bold shadow-[0_0_20px_rgba(0,173,181,0.3)]">Submit Application</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .wizard-step.active div {
+        background-color: #00ADB5 !important;
+        border-color: #00ADB5 !important;
+        color: #222831 !important;
+        box-shadow: 0 0 15px rgba(0, 173, 181, 0.4);
+    }
+
+    .wizard-step.completed div {
+        background-color: #00ADB5 !important;
+        border-color: #00ADB5 !important;
+        color: #222831 !important;
+    }
+
+    .wizard-step.active span {
+        color: #EEEEEE !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentStep = 1;
+            const totalSteps = 3;
+
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const progressLine = document.getElementById('progressLine');
+            const steps = document.querySelectorAll('.wizard-step');
+
+            function updateWizard() {
+                // Update Step Visibility
+                document.querySelectorAll('.step-content').forEach(s => s.classList.add('hidden'));
+                document.getElementById('step' + currentStep).classList.remove('hidden');
+
+                // Update Buttons
+                prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+                if (currentStep === totalSteps) {
+                    nextBtn.classList.add('hidden');
+                    submitBtn.classList.remove('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                }
+
+                // Update Progress
+                const progressWidth = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                progressLine.style.width = progressWidth + '%';
+
+                steps.forEach((step, idx) => {
+                    if (idx + 1 < currentStep) {
+                        step.classList.add('completed');
+                        step.classList.remove('active');
+                    } else if (idx + 1 === currentStep) {
+                        step.classList.add('active');
+                        step.classList.remove('completed');
+                    } else {
+                        step.classList.remove('active', 'completed');
+                    }
+                });
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateWizard();
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateWizard();
+                }
+            });
+
+            updateWizard();
+        });
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

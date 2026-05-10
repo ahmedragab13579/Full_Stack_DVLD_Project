@@ -11,7 +11,7 @@ namespace DVLD_Application.Dtos.TransfareDtos
     public class UserDto
     {
         [Key, ForeignKey("Person")]
-        public int PersonID { get;  set; }
+        public int Id { get;  set; }
 
         [Required]
         [MaxLength(100)]

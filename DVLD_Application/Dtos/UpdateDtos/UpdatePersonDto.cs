@@ -1,4 +1,4 @@
-﻿using DVLD_Domain.Enums;
+using DVLD_Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +12,8 @@ namespace DVLD_Application.Dtos.UpdateDtos
 {
     public class UpdatePersonDto
     {
+        [Required]
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(20)]

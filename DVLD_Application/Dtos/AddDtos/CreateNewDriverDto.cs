@@ -12,7 +12,7 @@ namespace DVLD_Application.Dtos.AddDtos
     public class CreateNewDriverDto
     {
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "PersonID must be a positive integer.")]
-        public int PersonID { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive integer.")]
+        public int Id { get; set; }
     }
 }

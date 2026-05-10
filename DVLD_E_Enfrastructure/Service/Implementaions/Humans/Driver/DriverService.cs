@@ -29,7 +29,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Driver
 
         public async Task<Result<int>> CreateDriverAsync(CreateNewDriverDto dto)
         {
-            if (await _context.Drivers.AnyAsync(d => d.PersonID == dto.PersonID))
+            if (await _context.Drivers.AnyAsync(d => d.Id == dto.Id))
             {
                 return Result<int>.Failure("Driver already exists for this person.");
             }
@@ -39,10 +39,10 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Driver
 
             try
             {
-                var driver = new DVLD_Domain.Models.Driver(dto.PersonID, currentUserId.Value);
+                var driver = new DVLD_Domain.Models.Driver(dto.Id, currentUserId.Value);
                 await _context.Drivers.AddAsync(driver);
                 await _context.SaveChangesAsync();
-                return Result<int>.Success(driver.PersonID); 
+                return Result<int>.Success(driver.Id); 
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Driver
             var driver = await _context.Drivers
                 .Include(d => d.Person)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(d => d.PersonID == driverId);
+                .FirstOrDefaultAsync(d => d.Id == driverId);
 
             if (driver == null) return Result<DriverDto>.Failure("Driver not found.");
 
@@ -86,14 +86,14 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Humans.Driver
             return Result<DriverDto>.Success(dto);
         }
 
-        public async Task<Result<DriverDto>> GetDriverByPersonIdAsync(int personId)
+        public async Task<Result<DriverDto>> GetDriverByPersonIDAsync(int Id)
         {
-            return await GetDriverByIdAsync(personId);
+            return await GetDriverByPersonIDAsync(Id);
         }
 
-        public async Task<Result<bool>> IsPersonDriverAsync(int personId)
+        public async Task<Result<bool>> IsPersonDriverAsync(int Id)
         {
-            var exists = await _context.Drivers.AnyAsync(d => d.PersonID == personId);
+            var exists = await _context.Drivers.AnyAsync(d => d.Id == Id);
             return Result<bool>.Success(exists);
         }
     }

@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/tests")]
-    [ApiController]
-    public class TestController : ControllerBase
+    public class TestController : Controller
     {
         private readonly ITestService _testService;
 
@@ -16,67 +14,96 @@ namespace DVLD_Persentation.Controllers
             _testService = testService;
         }
 
-        /// <summary>
-        /// Retrieves a test by its ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the test.</param>
-        /// <returns>The test details if found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTestById(int id)
+        // GET: /Test/Index
+        public async Task<IActionResult> Index()
+        {
+            var list = await _testService.GetAllTestsAsync();
+            return View(list);
+        }
+
+        // GET: /Test/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var dto = await _testService.GetTestByIdAsync(id);
             if (dto == null)
             {
-                return NotFound("Test not found.");
+                TempData["Error"] = "Test not found.";
+                return RedirectToAction("Index", "Home");
             }
-            return Ok(dto);
+            return View(dto);
         }
 
-        /// <summary>
-        /// Creates a new test appointment.
-        /// </summary>
-        /// <param name="dto">The test creation data.</param>
-        /// <returns>The ID of the scheduled test.</returns>
-        [HttpPost]
-        public async Task<IActionResult> CreateTest([FromBody] CreateNewTestDto dto)
+        // GET: /Test/Create
+        public IActionResult Create()
         {
+            return View();
+        }
+
+        // POST: /Test/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateNewTestDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             try
             {
                 var testId = await _testService.CreateTestAsync(dto);
-                return CreatedAtAction(nameof(GetTestById), new { id = testId }, testId);
+                TempData["Success"] = "Test scheduled successfully.";
+                return RedirectToAction(nameof(Details), new { id = testId });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
             }
         }
 
-        /// <summary>
-        /// Updates the result of a test.
-        /// </summary>
-        /// <param name="id">The ID of the test.</param>
-        /// <param name="dto">The result update data.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}/result")]
-        public async Task<IActionResult> UpdateTestResult(int id, [FromBody] UpdateTestResultDto dto)
+        // GET: /Test/UpdateResult/5
+        public async Task<IActionResult> UpdateResult(int id)
+        {
+            var dto = await _testService.GetTestByIdAsync(id);
+            if (dto == null)
+            {
+                TempData["Error"] = "Test not found.";
+                return RedirectToAction("Index", "Home");
+            }
+            // Pre-populate the update DTO with the test id
+            var updateDto = new UpdateTestResultDto { Id = id };
+            return View(updateDto);
+        }
+
+        // POST: /Test/UpdateResult/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateResult(int id, UpdateTestResultDto dto)
         {
             if (id != dto.Id)
             {
-                return BadRequest("ID mismatch.");
+                ModelState.AddModelError(string.Empty, "ID mismatch.");
+                return View(dto);
             }
-            
+
+            if (!ModelState.IsValid)
+                return View(dto);
+
             try
             {
                 var success = await _testService.TakeTestAsync(dto);
                 if (!success)
                 {
-                    return BadRequest("Failed to update test result (Test not found or error).");
+                    ModelState.AddModelError(string.Empty, "Failed to update test result (Test not found or error).");
+                    return View(dto);
                 }
-                return Ok("Test result updated successfully.");
+
+                TempData["Success"] = "Test result updated successfully.";
+                return RedirectToAction(nameof(Details), new { id });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
             }
         }
     }

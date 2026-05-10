@@ -47,7 +47,7 @@ namespace DVLD_Domain.Models
             base.UpdateModificationInfo(userid);
         }
 
-        public InternationalLicense(int applicationID, int driverID, int issuedUsingLocalLicenseID,DateTime expirationDate,int createduserid):base(createduserid)
+        public InternationalLicense(int applicationID, int driverID, int issuedUsingLocalLicenseID,DateTime expirationDate,int? createduserid):base(createduserid)
         {
             
             if (applicationID <= 0)

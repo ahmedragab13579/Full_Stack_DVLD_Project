@@ -79,7 +79,7 @@ namespace DVLD_Domain.Models
             UpdateModificationInfo(updatedByUserId);
         }
 
-        public License(int applicationID, int driverID, int licenseClassID, DateTime expirationDate, string notes,LicenseIssueReason issueReason, decimal fees, int createdByUserId): base(createdByUserId)
+        public License(int applicationID, int driverID, int licenseClassID, DateTime expirationDate, string notes,LicenseIssueReason issueReason, decimal fees, int? createdbyuserid): base(createdbyuserid)
         {
             if (applicationID <= 0)
                 throw new ArgumentException("ApplicationID must be a positive integer.", nameof(applicationID));
@@ -92,8 +92,8 @@ namespace DVLD_Domain.Models
 
             if(expirationDate <= DateTime.UtcNow)
                 throw new ArgumentException("ExpirationDate must be a future date.", nameof(expirationDate));
-            if(createdByUserId <= 0)
-                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
+            if(createdbyuserid <= 0)
+                throw new ArgumentException("createdbyuserid must be a positive integer.", nameof(createdbyuserid));
             ApplicationID = applicationID;
             IssueDate= DateTime.UtcNow;
             DriverID = driverID;

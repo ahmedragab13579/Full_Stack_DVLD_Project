@@ -39,9 +39,6 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
 
@@ -51,7 +48,7 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<DateTime>("LastStatusDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PersonID")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -63,15 +60,18 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationTypeID");
 
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("PersonID");
+                    b.HasIndex("Id");
 
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("Applications");
                 });
@@ -86,9 +86,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("Fees")
                         .HasColumnType("decimal(18,2)");
@@ -107,11 +104,14 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("ApplicationTypes");
                 });
@@ -129,9 +129,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -154,9 +151,10 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LocalDrivingLicenseApplicationID");
 
@@ -164,23 +162,25 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.HasIndex("UpdatedByUserId");
 
+                    b.HasIndex("createdbyuserid");
+
                     b.ToTable("Appointments");
                 });
 
             modelBuilder.Entity("DVLD_Domain.Models.Country", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CountryId");
 
                     b.ToTable("Countries");
                 });
@@ -195,9 +195,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("FineFees")
                         .HasColumnType("decimal(18,2)");
@@ -226,9 +223,10 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("LicenseID");
 
@@ -238,23 +236,25 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.HasIndex("UpdatedByUserId");
 
+                    b.HasIndex("createdbyuserid");
+
                     b.ToTable("DetainedLicenses");
                 });
 
             modelBuilder.Entity("DVLD_Domain.Models.Driver", b =>
                 {
-                    b.Property<int>("PersonID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedByUserID")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonID");
+                    b.Property<int>("createdbyuserid")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CreatedByUserID");
+                    b.HasKey("Id");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("Drivers");
                 });
@@ -272,9 +272,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<int>("DriverID")
                         .HasColumnType("int");
@@ -300,18 +297,21 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationID")
                         .IsUnique();
-
-                    b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("DriverID");
 
                     b.HasIndex("IssuedUsingLocalLicenseID");
 
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("InternationalLicenses");
                 });
@@ -329,9 +329,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<int>("DriverID")
                         .HasColumnType("int");
@@ -368,18 +365,21 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationID")
                         .IsUnique();
-
-                    b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("DriverID");
 
                     b.HasIndex("LicenseClassID");
 
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("Licenses");
                 });
@@ -408,9 +408,6 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
-
                     b.Property<byte>("DefaultValidityLength")
                         .HasColumnType("tinyint");
 
@@ -426,11 +423,14 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("LicenseClasses");
                 });
@@ -455,25 +455,19 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.Person", b =>
                 {
-                    b.Property<int>("PersonID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("CountryID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -491,11 +485,7 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -536,9 +526,10 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
-                    b.HasKey("PersonID");
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("NationalNo")
                         .IsUnique();
@@ -546,6 +537,8 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.HasIndex("NationalityCountryID");
 
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("Persons");
                 });
@@ -557,9 +550,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Id")
                         .HasColumnType("int");
@@ -581,11 +571,14 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("AppointmentID");
 
-                    b.HasIndex("CreatedByUserId");
-
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("Tests");
                 });
@@ -600,9 +593,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -626,25 +616,25 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.Property<int?>("UpdatedByUserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
-
                     b.HasIndex("UpdatedByUserId");
+
+                    b.HasIndex("createdbyuserid");
 
                     b.ToTable("TestTypes");
                 });
 
             modelBuilder.Entity("DVLD_Domain.Models.User", b =>
                 {
-                    b.Property<int>("PersonID")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -664,7 +654,10 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("PersonID");
+                    b.Property<int?>("createdbyuserid")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
@@ -706,21 +699,20 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.Person", "Person")
                         .WithMany("Applications")
-                        .HasForeignKey("PersonID")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ApplicationType");
@@ -734,15 +726,14 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.ApplicationType", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
@@ -752,12 +743,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.Appointment", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.LocalDrivingLicenseApplication", "LocalDrivingLicenseApplication")
                         .WithMany("Appointments")
                         .HasForeignKey("LocalDrivingLicenseApplicationID")
@@ -775,6 +760,11 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("LocalDrivingLicenseApplication");
@@ -786,12 +776,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.DetainedLicense", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.License", "License")
                         .WithMany("DetainedLicenses")
                         .HasForeignKey("LicenseID")
@@ -813,6 +797,11 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("CreatedByUser");
 
                     b.Navigation("License");
@@ -826,15 +815,15 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.Driver", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserID")
+                    b.HasOne("DVLD_Domain.Models.Person", "Person")
+                        .WithOne("Driver")
+                        .HasForeignKey("DVLD_Domain.Models.Driver", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DVLD_Domain.Models.Person", "Person")
-                        .WithOne("Driver")
-                        .HasForeignKey("DVLD_Domain.Models.Driver", "PersonID")
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -848,12 +837,6 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.HasOne("DVLD_Domain.Models.Application", "Application")
                         .WithOne("InternationalLicense")
                         .HasForeignKey("DVLD_Domain.Models.InternationalLicense", "ApplicationID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -872,6 +855,11 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Application");
@@ -893,12 +881,6 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.Driver", "Driver")
                         .WithMany("Licenses")
                         .HasForeignKey("DriverID")
@@ -916,6 +898,11 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .HasForeignKey("UpdatedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Application");
 
                     b.Navigation("CreatedByUser");
@@ -929,15 +916,14 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.LicenseClass", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
@@ -966,12 +952,6 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.Person", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.Country", "NationalityCountry")
                         .WithMany("People")
                         .HasForeignKey("NationalityCountryID")
@@ -981,6 +961,11 @@ namespace DVLD_E_Enfrastructure.Migrations
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
@@ -998,15 +983,14 @@ namespace DVLD_E_Enfrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Appointment");
@@ -1018,15 +1002,14 @@ namespace DVLD_E_Enfrastructure.Migrations
 
             modelBuilder.Entity("DVLD_Domain.Models.TestType", b =>
                 {
-                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("DVLD_Domain.Models.User", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DVLD_Domain.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("createdbyuserid")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
@@ -1038,7 +1021,7 @@ namespace DVLD_E_Enfrastructure.Migrations
                 {
                     b.HasOne("DVLD_Domain.Models.Person", "Person")
                         .WithOne("User")
-                        .HasForeignKey("DVLD_Domain.Models.User", "PersonID")
+                        .HasForeignKey("DVLD_Domain.Models.User", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.TransfareDtos;
@@ -67,6 +67,16 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.License.Local
             {
                 return Result<bool>.Failure(ex.Message);
             }
+        }
+
+        public async Task<Result<List<LicenseDto>>> GetAllLicensesAsync()
+        {
+            var dtos = await _context.Licenses
+                .AsNoTracking()
+                .ProjectTo<LicenseDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return Result<List<LicenseDto>>.Success(dtos);
         }
 
         public async Task<Result<LicenseDto>> GetLicenseByIdAsync(int licenseId)

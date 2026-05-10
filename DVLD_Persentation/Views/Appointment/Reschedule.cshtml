@@ -1,0 +1,44 @@
+@model DVLD_Application.Dtos.UpdateDtos.UpdateAppointmentDateDto
+@{
+    ViewData["Title"] = "Reschedule Appointment";
+}
+
+<div class="max-w-xl mx-auto">
+    <form method="post" class="bg-dvld-gray/30 rounded-3xl p-8 border border-white/5 shadow-2xl backdrop-blur-sm">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-8 flex items-center gap-3">
+            <div class="h-10 w-10 rounded-xl bg-dvld-teal/20 flex items-center justify-center text-dvld-teal">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Reschedule Appointment</h2>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="mb-6 rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-xs text-red-400"></div>
+
+        <input type="hidden" name="AppointmentId" value="@Model?.AppointmentId" />
+
+        <div class="space-y-6">
+            <div class="space-y-2">
+                <label class="block text-[11px] font-bold uppercase tracking-widest text-slate-500 ml-1">Appointment ID</label>
+                <input name="AppointmentId" type="number" value="@Model?.AppointmentId" readonly required
+                       class="w-full bg-dvld-dark/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-400 cursor-not-allowed outline-none" />
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-[11px] font-bold uppercase tracking-widest text-slate-500 ml-1">New Appointment Date</label>
+                <input name="NewAppointmentDate" type="datetime-local" required
+                       class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal focus:ring-2 focus:ring-dvld-teal/20 outline-none transition-all" />
+            </div>
+        </div>
+
+        <div class="mt-10 flex items-center justify-end gap-4 border-t border-white/5 pt-6">
+            <button type="button" onclick="history.back()" class="text-sm font-medium text-slate-500 hover:text-white transition-colors">Cancel</button>
+            <button class="bg-dvld-teal hover:bg-dvld-teal/90 text-dvld-dark font-bold px-8 py-3 rounded-xl text-sm transition-all shadow-lg shadow-dvld-teal/10" type="submit">Confirm Reschedule</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

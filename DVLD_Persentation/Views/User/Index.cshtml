@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "System Users";
+}
+
+<div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h2 class="text-xl font-bold text-dvld-light">System Users</h2>
+        <p class="text-xs text-slate-400 mt-1">Manage administrative accounts and permissions.</p>
+    </div>
+    
+    <div class="flex items-center gap-3">
+        <a asp-action="Create" class="btn-primary flex items-center gap-2 text-xs py-2.5">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            Add New User
+        </a>
+    </div>
+</div>
+
+@{
+    var rows = Model is IEnumerable<object> data
+        ? data.ToList()
+        : new List<object>();
+}
+
+<partial name="_ObjectTable" model="rows" />

@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/detained-licenses")]
-    [ApiController]
-    public class DetainLicenseController : ControllerBase
+    public class DetainLicenseController : Controller
     {
         private readonly IDetainLicenseService _detainLicenseService;
 
@@ -15,90 +13,107 @@ namespace DVLD_Persentation.Controllers
             _detainLicenseService = detainLicenseService;
         }
 
-        /// <summary>
-        /// Retrieves a list of all detained licenses.
-        /// </summary>
-        /// <returns>A list of detained licenses.</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAllDetainedLicenses()
+        // GET: /DetainLicense/Index
+        public async Task<IActionResult> Index()
         {
             var result = await _detainLicenseService.GetAllDetainedLicensesAsync();
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
             }
             var list = result.Data.Select(r => r.Data).Where(d => d != null).ToList();
-            return Ok(list);
+            return View(list);
         }
 
-        /// <summary>
-        /// Retrieves a detained license by its ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the detention.</param>
-        /// <returns>The detained license details.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetDetainedLicenseById(int id)
+        // GET: /DetainLicense/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _detainLicenseService.GetDetainedLicenseByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves the active detention details for a specific license ID.
-        /// </summary>
-        /// <param name="licenseId">The license ID.</param>
-        /// <returns>The detention details if active.</returns>
-        [HttpGet("license/{licenseId}")]
-        public async Task<IActionResult> GetActiveDetentionByLicenseId(int licenseId)
+        // GET: /DetainLicense/ActiveDetention?licenseId=5
+        public async Task<IActionResult> ActiveDetention(int licenseId)
         {
             var result = await _detainLicenseService.GetActiveDetainedLicenseByLicenseIdAsync(licenseId);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Detains a license.
-        /// </summary>
-        /// <param name="dto">The detention details.</param>
-        /// <returns>The ID of the detention record.</returns>
-        [HttpPost]
-        public async Task<IActionResult> DetainLicense([FromBody] CreateNewDetainedLicenseDto dto)
+        // GET: /DetainLicense/Detain
+        public IActionResult Detain(int? licenseId)
         {
+            var dto = new CreateNewDetainedLicenseDto
+            {
+                LicenseID = licenseId ?? 0,
+                FineFees = 0m
+            };
+            return View(dto);
+        }
+
+        // POST: /DetainLicense/Detain
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Detain(CreateNewDetainedLicenseDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _detainLicenseService.DetainLicenseAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetDetainedLicenseById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "License detained successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Releases a detained license.
-        /// </summary>
-        /// <param name="dto">The release details.</param>
-        /// <returns>A success message.</returns>
-        [HttpPost("release")]
-        public async Task<IActionResult> ReleaseLicense([FromBody] CreateNewReleaseLicenseDto dto)
+        // GET: /DetainLicense/Release
+        public IActionResult Release(int? detainId)
         {
-            try 
+            var dto = new CreateNewReleaseLicenseDto
+            {
+                DetainedLicenseID = detainId ?? 0
+            };
+            return View(dto);
+        }
+
+        // POST: /DetainLicense/Release
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Release(CreateNewReleaseLicenseDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            try
             {
                 var success = await _detainLicenseService.ReleaseLicenseAsync(dto);
                 if (!success)
                 {
-                    return BadRequest("Failed to release license (License not found or not detained).");
+                    ModelState.AddModelError(string.Empty, "Failed to release license (License not found or not detained).");
+                    return View(dto);
                 }
-                return Ok("License released successfully.");
+
+                TempData["Success"] = "License released successfully.";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
             }
         }
     }

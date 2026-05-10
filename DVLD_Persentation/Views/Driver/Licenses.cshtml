@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Driver Licenses";
+}
+
+<div class="mb-4 flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-[#EEEEEE]">Driver Licenses</h2>
+</div>
+
+@{
+    var rows = Model is IEnumerable data
+        ? data.Cast<object>().ToList()
+        : new List<object>();
+}
+
+<partial name="_ObjectTable" model="rows" />
+

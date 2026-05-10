@@ -49,7 +49,7 @@ namespace DVLD_Domain.Models
             UpdateModificationInfo(userid);
         }
 
-        public TestType(string title, string description, decimal fees, int userid) : base(userid)
+        public TestType(string title, string description, decimal fees, int? userid) : base(userid)
         {
             SetProperties(title, description, fees);
         }

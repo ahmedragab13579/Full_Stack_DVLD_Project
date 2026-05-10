@@ -15,13 +15,13 @@ namespace DVLD_Application.Services.Interfaces.Humans.User
         Task<Result<UserDto>> GetUserByIdAsync(int userId);
 
        
-        Task<Result<UserDto>> GetUserByPersonIdAsync(int personId);
+        Task<Result<UserDto>> GetUserByPersonIDAsync(int Id);
 
         Task<IEnumerable<Result<UserDto>>> GetAllUsersAsync();
 
         Task<Result<bool>> IsUserNameExistAsync(string userName);
 
-        Task<Result<bool>> IsPersonUserAsync(int personId);
+        Task<Result<bool>> IsPersonUserAsync(int Id);
 
 
         Task<Result<int>> CreateUserAsync(CreateNewUserDto dto);

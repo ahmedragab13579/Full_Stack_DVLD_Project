@@ -1,0 +1,98 @@
+@using DVLD_Domain.Enums
+@{
+    ViewData["Title"] = "Add New Person";
+}
+
+<div class="max-w-4xl mx-auto">
+    <form asp-action="Create" method="post" id="personCreateForm" class="bg-dvld-gray/30 rounded-[2.5rem] p-10 border border-white/5 shadow-2xl backdrop-blur-sm">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-10 flex items-center justify-between border-b border-white/5 pb-6">
+            <div>
+                <h2 class="text-3xl font-extrabold text-white tracking-tight">Person Information</h2>
+                <p class="text-sm text-slate-400 mt-2 font-medium">Register a new profile in the system.</p>
+            </div>
+            <div class="h-14 w-14 rounded-2xl bg-dvld-teal/10 flex items-center justify-center text-dvld-teal shadow-inner">
+                <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+            </div>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="mb-8 rounded-2xl bg-red-500/10 border border-red-500/20 p-5 text-sm text-red-400"></div>
+
+        <div class="grid gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">First Name</label>
+                    <input name="FirstName" placeholder="John" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Second Name</label>
+                    <input name="SecondName" placeholder="Michael" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Third Name</label>
+                    <input name="ThirdName" placeholder="Optional" class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Last Name</label>
+                    <input name="LastName" placeholder="Doe" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">National Number</label>
+                    <input name="NationalNo" placeholder="Unique ID" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Date of Birth</label>
+                    <input name="DateOfBirth" type="date" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Gender</label>
+                    <select name="Gender" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3.5 text-sm text-white outline-none focus:border-dvld-teal appearance-none cursor-pointer">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="0">Male</option>
+                        <option value="1">Female</option>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Nationality</label>
+                    <select name="CountryID" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3.5 text-sm text-white outline-none focus:border-dvld-teal appearance-none cursor-pointer">
+                        <option value="" disabled selected>Select Country</option>
+                        @if (ViewBag.Countries != null)
+                        {
+                            foreach (var country in ViewBag.Countries)
+                            {
+                                <option value="@country.Id">@country.CountryName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Phone Number</label>
+                    <input name="Phone" placeholder="+1 (555) 000-0000" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Email Address</label>
+                    <input name="Email" type="email" placeholder="john@example.com" class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all" />
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 ml-1">Residential Address</label>
+                <textarea name="Address" rows="3" placeholder="Full Address" required class="w-full bg-dvld-dark border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-dvld-teal outline-none transition-all"></textarea>
+            </div>
+        </div>
+
+        <div class="mt-12 flex items-center justify-end gap-6 border-t border-white/5 pt-8">
+            <a asp-action="Index" class="text-sm font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors px-6">Cancel</a>
+            <button type="submit" id="submitBtn" class="bg-dvld-teal hover:bg-dvld-teal/90 text-dvld-dark font-black px-12 py-4 rounded-2xl text-sm uppercase tracking-widest transition-all shadow-xl shadow-dvld-teal/20">
+                Save Record
+            </button>
+        </div>
+    </form>
+</div>

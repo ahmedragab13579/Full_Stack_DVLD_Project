@@ -13,9 +13,6 @@ namespace DVLD_Domain.Models
 {
     public class Person : BaseEntity
     {
-        [Key]
-        public int PersonID { get; private set; }
-
         [Required]
         [MaxLength(20)]
         public string NationalNo { get; private set; }
@@ -49,12 +46,12 @@ namespace DVLD_Domain.Models
 
         [MaxLength(100)]
         [EmailAddress]
-        public string Email { get; private set; } 
+        public string Email { get; private set; }
 
         [MaxLength(255)]
-        public string ImagePath { get; private set; } 
+        public string? ImagePath { get; private set; } = "No Image";
 
-        public int CountryID { get; private set; }
+        public int NationalityCountryID { get; private set; }
 
         [ForeignKey("NationalityCountryID")]
         public virtual Country NationalityCountry { get; private set; }
@@ -128,7 +125,7 @@ namespace DVLD_Domain.Models
         public Person(
             string nationalNo, string firstName, string secondName, string lastName,
             DateTime dateOfBirth, Gender gender, string phone, int nationalityCountryID, 
-            string thirdName, string email, string address, string imagePath,int userid
+            string thirdName, string email, string address, string imagePath,int?userid=null
         )
             : base(userid)
         {
@@ -155,7 +152,7 @@ namespace DVLD_Domain.Models
             DateOfBirth = dateOfBirth;
             Gender = gender;
             Phone = phone;
-            CountryID = nationalityCountryID;
+            NationalityCountryID = nationalityCountryID;
             ThirdName = thirdName;
             Email = email;
             Address = address;

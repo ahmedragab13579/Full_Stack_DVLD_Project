@@ -34,14 +34,14 @@ namespace DVLD_Domain.Models
         {
         }
 
-        public DetainedLicense(int licenseID, decimal fineFees, int createdByUserId):base(createdByUserId)
+        public DetainedLicense(int licenseID, decimal fineFees, int? createdbyuserid):base(createdbyuserid)
         {
             if (licenseID <= 0)
                 throw new ArgumentException("LicenseID must be a positive integer.", nameof(licenseID));
             if (fineFees < 0)
                 throw new ArgumentException("FineFees cannot be negative.", nameof(fineFees));
-            if (createdByUserId <= 0)
-                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
+            if (createdbyuserid <= 0)
+                throw new ArgumentException("createdbyuserid must be a positive integer.", nameof(createdbyuserid));
             LicenseID = licenseID;
             FineFees = fineFees;
             IsReleased = false;

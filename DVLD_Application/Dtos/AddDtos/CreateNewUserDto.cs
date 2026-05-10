@@ -12,9 +12,9 @@ namespace DVLD_Application.Dtos.AddDtos
     public class CreateNewUserDto
     {
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "PersonID must be a positive integer.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Id must be a positive integer.")]
         [Display(Name = "Person ID")]
-        public int PersonID { get;  set; }
+        public int Id { get;  set; }
 
         [Required]
         [MaxLength(100)]

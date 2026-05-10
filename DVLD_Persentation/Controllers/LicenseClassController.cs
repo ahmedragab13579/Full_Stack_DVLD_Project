@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/license-classes")]
-    [ApiController]
-    public class LicenseClassController : ControllerBase
+    public class LicenseClassController : Controller
     {
         private readonly ILicenseClassService _licenseClassService;
 
@@ -16,100 +14,132 @@ namespace DVLD_Persentation.Controllers
             _licenseClassService = licenseClassService;
         }
 
-        /// <summary>
-        /// Retrieves all license classes or filters by name.
-        /// </summary>
-        /// <param name="name">Optional name to filter by.</param>
-        /// <returns>A list of license classes.</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAllLicenseClasses([FromQuery] string? name)
+        // GET: /LicenseClass/Index  OR  /LicenseClass/Index?name=Car
+        public async Task<IActionResult> Index(string? name)
         {
             if (!string.IsNullOrEmpty(name))
             {
-                var result = await _licenseClassService.GetLicenseClassByClassNameAsync(name);
-                if (!result.IsSuccess)
+                var single = await _licenseClassService.GetLicenseClassByClassNameAsync(name);
+                if (!single.IsSuccess)
                 {
-                    return NotFound(result.Message);
+                    TempData["Error"] = single.Message;
+                    return View(Enumerable.Empty<object>());
                 }
-                return Ok(new[] { result.Data });
+                ViewBag.FilterName = name;
+                return View(new[] { single.Data });
             }
 
-            var results = await _licenseClassService.GetAllLicenseClassesAsync();
-            if (!results.IsSuccess)
+            var result = await _licenseClassService.GetAllLicenseClassesAsync();
+            if (!result.IsSuccess)
             {
-                return BadRequest(results.Message);
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
             }
-            return Ok(results.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves a license class by its ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the license class.</param>
-        /// <returns>The license class details.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetLicenseClassById(int id)
+        // GET: /LicenseClass/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _licenseClassService.GetLicenseClassByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Creates a new license class.
-        /// </summary>
-        /// <param name="dto">The license class creation data.</param>
-        /// <returns>The ID of the created license class.</returns>
-        [HttpPost]
-        public async Task<IActionResult> CreateLicenseClass([FromBody] CreateNewLicenseClassDto dto)
+        // GET: /LicenseClass/Create
+        public IActionResult Create()
         {
+            return View();
+        }
+
+        // POST: /LicenseClass/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateNewLicenseClassDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _licenseClassService.CreateLicenseClassAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetLicenseClassById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "License Class created successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Updates an existing license class.
-        /// </summary>
-        /// <param name="id">The ID of the license class.</param>
-        /// <param name="dto">The updated data.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLicenseClass(int id, [FromBody] UpdateLicenseClassDto dto)
+        // GET: /LicenseClass/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var result = await _licenseClassService.GetLicenseClassByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            // Map to UpdateDto - adjust property names to match your actual DTO
+            var dto = new UpdateLicenseClassDto { Id = id };
+            return View(dto);
+        }
+
+        // POST: /LicenseClass/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdateLicenseClassDto dto)
         {
             if (id != dto.Id)
             {
-                return BadRequest("ID mismatch.");
+                ModelState.AddModelError(string.Empty, "ID mismatch.");
+                return View(dto);
             }
+
+            if (!ModelState.IsValid)
+                return View(dto);
 
             var result = await _licenseClassService.UpdateLicenseClassAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return Ok("License Class updated successfully.");
+
+            TempData["Success"] = "License Class updated successfully.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        /// <summary>
-        /// Deletes a license class by its ID.
-        /// </summary>
-        /// <param name="id">The ID of the license class to delete.</param>
-        /// <returns>A success message.</returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLicenseClass(int id)
+        // GET: /LicenseClass/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _licenseClassService.GetLicenseClassByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            return View(result.Data);
+        }
+
+        // POST: /LicenseClass/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var result = await _licenseClassService.DeleteLicenseClassAsync(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Delete), new { id });
             }
-            return Ok("License Class deleted successfully.");
+
+            TempData["Success"] = "License Class deleted successfully.";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

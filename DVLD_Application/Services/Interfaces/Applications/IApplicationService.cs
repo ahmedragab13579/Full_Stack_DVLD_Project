@@ -20,6 +20,6 @@ namespace DVLD_Application.Services.Interfaces.Applications
         Task<Result<int>> AddAsync(CreateNewApplicationDto newApplicationDto);
         Task<Result<ApplicationDto>> GetByIdAsync(int id);
         Task<Result<List<ApplicationDto>>> GetAllAsync();
-        Task<Result<bool>> IsPersonHasActiveApplicationAsync(int personId, int applicationtypeid);
+        Task<Result<bool>> IsPersonHasActiveApplicationAsync(int Id, int applicationtypeid);
     }
 }

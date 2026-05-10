@@ -36,7 +36,7 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Country
 
         public async Task<Result<CountryDto>> GetCountryByIdAsync(int countryId)
         {
-            var country = await _context.Countries.AsNoTracking().FirstOrDefaultAsync(c => c.Id == countryId);
+            var country = await _context.Countries.AsNoTracking().FirstOrDefaultAsync(c => c.CountryId == countryId);
             if (country == null)
             {
                 return Result<CountryDto>.Failure("Country not found.");

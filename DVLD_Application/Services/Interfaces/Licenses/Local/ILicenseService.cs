@@ -1,4 +1,4 @@
-﻿using DVLD_Domain.Enums;
+using DVLD_Domain.Enums;
 using DVLD_Application.Results;
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.TransfareDtos;
@@ -10,7 +10,7 @@ namespace DVLD_Application.Services.Interfaces.Licenses.Local
     public interface ILicenseService
     {
         Task<Result<LicenseDto>> GetLicenseByIdAsync(int licenseId);
-
+        Task<Result<List<LicenseDto>>> GetAllLicensesAsync();
         Task<Result<List<LicenseDto>>> GetLicensesByDriverIdAsync(int driverId);
 
         

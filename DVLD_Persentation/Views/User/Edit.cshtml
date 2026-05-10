@@ -1,0 +1,136 @@
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="mb-6 flex items-center justify-between">
+    <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-dvld-teal/70">User Management</p>
+        <h2 class="text-xl font-bold text-dvld-light">Edit User</h2>
+    </div>
+    <a asp-action="Index" class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-dvld-teal transition-colors">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        Back to Users
+    </a>
+</div>
+
+<form asp-action="Edit" method="post" class="space-y-6" data-validate>
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="rounded-lg bg-red-500/10 border border-red-500/20 p-4 text-xs text-red-400"></div>
+
+    <div class="grid gap-6 lg:grid-cols-3">
+        <!-- Main Form -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Account Information -->
+            <div class="dvld-card">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-3">
+                    <div class="h-6 w-6 rounded bg-dvld-teal/20 flex items-center justify-center">
+                        <svg class="h-3.5 w-3.5 text-dvld-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    Account Information
+                </h3>
+                <div class="grid gap-5 md:grid-cols-2">
+                    <div>
+                        <label for="UserName" class="required">Username</label>
+                        <input type="text" id="UserName" name="UserName" placeholder="Enter username" required />
+                        <span class="error-message" data-valmsg-for="UserName"></span>
+                    </div>
+                    <div>
+                        <label for="Email">Email Address</label>
+                        <input type="email" id="Email" name="Email" placeholder="user@example.com" />
+                        <span class="help-text">Used for notifications and password recovery</span>
+                    </div>
+                    <div>
+                        <label for="FullName">Full Name</label>
+                        <input type="text" id="FullName" name="FullName" placeholder="Full display name" />
+                    </div>
+                    <div>
+                        <label for="Id">Linked Person ID</label>
+                        <input type="number" id="Id" name="Id" placeholder="Associated person record ID" min="1" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role & Permissions -->
+            <div class="dvld-card">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-3">
+                    <div class="h-6 w-6 rounded bg-dvld-teal/20 flex items-center justify-center">
+                        <svg class="h-3.5 w-3.5 text-dvld-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    Role & Permissions
+                </h3>
+                <div class="mb-5">
+                    <label for="Role" class="required">System Role</label>
+                    <select id="Role" name="Role" required>
+                        <option value="">Select a role...</option>
+                        <option value="admin">Administrator</option>
+                        <option value="officer">License Officer</option>
+                        <option value="clerk">Data Entry Clerk</option>
+                        <option value="viewer">Read-Only Viewer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="mb-3 block">Module Permissions</label>
+                    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                        @{
+                            var modules = new[] { "Person Management", "Applications", "Appointments", "Test Records", "License Issuance", "Detain Licenses", "User Management", "License Classes", "System Reports" };
+                        }
+                        @foreach (var module in modules)
+                        {
+                            var id = module.Replace(" ", "");
+                            <label for="perm_@id" class="flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-800/30 px-4 py-3 cursor-pointer hover:border-dvld-teal/40 transition-colors group">
+                                <input type="checkbox" id="perm_@id" name="Permissions" value="@module" class="h-4 w-4 rounded border-slate-600 bg-transparent text-dvld-teal focus:ring-dvld-teal" />
+                                <span class="text-xs text-slate-400 group-hover:text-slate-300 transition-colors">@module</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Status Panel -->
+        <div class="space-y-6">
+            <div class="dvld-card">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-white mb-6 flex items-center gap-3">
+                    <div class="h-6 w-6 rounded bg-dvld-teal/20 flex items-center justify-center">
+                        <svg class="h-3.5 w-3.5 text-dvld-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    Account Status
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="radio" id="statusActive" name="IsActive" value="true" class="h-4 w-4 text-dvld-teal border-slate-600 focus:ring-dvld-teal" />
+                        <div>
+                            <p class="text-sm font-bold text-emerald-400">Active</p>
+                            <p class="text-xs text-slate-500">User can log in and use the system</p>
+                        </div>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="radio" id="statusInactive" name="IsActive" value="false" class="h-4 w-4 text-dvld-teal border-slate-600 focus:ring-dvld-teal" />
+                        <div>
+                            <p class="text-sm font-bold text-red-400">Inactive</p>
+                            <p class="text-xs text-slate-500">Account is suspended, login disabled</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="dvld-card space-y-3">
+                <button type="submit" id="saveBtn" class="btn-primary w-full py-3 shadow-[0_0_20px_rgba(0,173,181,0.2)]">
+                    Save Changes
+                </button>
+                <a asp-action="ChangePassword" class="block w-full text-center rounded-lg border border-slate-700 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-400 hover:border-dvld-teal hover:text-dvld-teal transition-all">
+                    Change Password
+                </a>
+                <button type="button" onclick="DVLD.showModal('Deactivate Account', 'Are you sure you want to deactivate this account? The user will lose access immediately.', [{ label: 'Deactivate', onClick: 'DVLD.showToast(\'Account deactivated\', \'error\'); DVLD.closeModal();', class: 'btn-primary btn-danger btn-sm' }])"
+                        class="block w-full text-center rounded-lg border border-red-500/20 py-2.5 text-xs font-bold uppercase tracking-widest text-red-400 hover:bg-red-500/5 transition-all">
+                    Deactivate Account
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

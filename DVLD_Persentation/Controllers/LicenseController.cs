@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/licenses")]
-    [ApiController]
-    public class LicenseController : ControllerBase
+    public class LicenseController : Controller
     {
         private readonly ILicenseService _licenseService;
         private readonly IInternationalLicenseService _internationalLicenseService;
@@ -21,131 +19,192 @@ namespace DVLD_Persentation.Controllers
             _internationalLicenseService = internationalLicenseService;
         }
 
-        /// <summary>
-        /// Retrieves a license by its ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the license.</param>
-        /// <returns>The license details if found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetLicenseById(int id)
+        // GET: /License/Index
+        public async Task<IActionResult> Index()
+        {
+            var result = await _licenseService.GetAllLicensesAsync();
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
+            }
+            return View(result.Data);
+        }
+
+        // GET: /License/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _licenseService.GetLicenseByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index", "Driver");
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Issues a new license for the first time.
-        /// </summary>
-        /// <param name="dto">The license issuance data.</param>
-        /// <returns>The ID of the newly issued license.</returns>
-        [HttpPost]
-        public async Task<IActionResult> IssueLicense([FromBody] CreateNewLicenseDto dto)
+        // GET: /License/Issue
+        public IActionResult Issue()
         {
+            return View();
+        }
+
+        // POST: /License/Issue
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Issue(CreateNewLicenseDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _licenseService.IssueLicenseFirstTimeAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetLicenseById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "License issued successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Renews an existing license.
-        /// </summary>
-        /// <param name="id">The ID of the license to renew.</param>
-        /// <param name="notes">Optional notes for the renewal.</param>
-        /// <returns>The new license ID.</returns>
-        [HttpPut("{id}/renew")]
-        public async Task<IActionResult> RenewLicense(int id, [FromBody] string notes)
+        // GET: /License/Renew/5
+        public async Task<IActionResult> Renew(int id)
+        {
+            var result = await _licenseService.GetLicenseByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index", "Driver");
+            }
+            ViewBag.LicenseId = id;
+            return View();
+        }
+
+        // POST: /License/Renew/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Renew(int id, string notes)
         {
             var result = await _licenseService.RenewLicenseAsync(id, notes);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                ViewBag.LicenseId = id;
+                return View();
             }
-            return Ok(new { NewLicenseId = result.Data, Message = "License renewed successfully." });
+
+            TempData["Success"] = "License renewed successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Replaces a lost or damaged license.
-        /// </summary>
-        /// <param name="id">The ID of the license to replace.</param>
-        /// <param name="request">The replacement reason and notes.</param>
-        /// <returns>The new license ID.</returns>
-        [HttpPut("{id}/replace")]
-        public async Task<IActionResult> ReplaceLicense(int id, [FromBody] ReplaceLicenseRequest request)
+        // GET: /License/Replace/5
+        public async Task<IActionResult> Replace(int id)
         {
-            var result = await _licenseService.ReplaceLicenseAsync(id, request.Reason, request.Notes);
+            var result = await _licenseService.GetLicenseByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index", "Driver");
             }
-            return Ok(new { NewLicenseId = result.Data, Message = "License replaced successfully." });
+            ViewBag.LicenseId = id;
+            ViewBag.Reasons = Enum.GetValues(typeof(LicenseIssueReason));
+            return View();
         }
 
-        /// <summary>
-        /// Activates or Deactivates a license.
-        /// </summary>
-        /// <param name="id">The ID of the license.</param>
-        /// <param name="isActive">The new activation status.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}/activation")]
-        public async Task<IActionResult> UpdateActivation(int id, [FromBody] bool isActive)
+        // POST: /License/Replace/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Replace(int id, LicenseIssueReason reason, string notes)
+        {
+            var result = await _licenseService.ReplaceLicenseAsync(id, reason, notes);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                ViewBag.LicenseId = id;
+                ViewBag.Reasons = Enum.GetValues(typeof(LicenseIssueReason));
+                return View();
+            }
+
+            TempData["Success"] = "License replaced successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
+        }
+
+        // POST: /License/UpdateActivation
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateActivation(int id, bool isActive)
         {
             if (isActive)
             {
                 var result = await _licenseService.ActivateLicenseAsync(id);
-                if (!result.IsSuccess) return BadRequest(result.Message);
+                if (!result.IsSuccess)
+                {
+                    TempData["Error"] = result.Message;
+                    return RedirectToAction(nameof(Details), new { id });
+                }
             }
             else
             {
                 var result = await _licenseService.DeactivateLicenseAsync(id);
-                if (!result.IsSuccess) return BadRequest(result.Message);
+                if (!result.IsSuccess)
+                {
+                    TempData["Error"] = result.Message;
+                    return RedirectToAction(nameof(Details), new { id });
+                }
             }
-            return Ok($"License {(isActive ? "activated" : "deactivated")} successfully.");
+
+            TempData["Success"] = $"License {(isActive ? "activated" : "deactivated")} successfully.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-
-        /// <summary>
-        /// Retrieves an international license by its ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the international license.</param>
-        /// <returns>The international license details.</returns>
-        [HttpGet("international/{id}")]
-        public async Task<IActionResult> GetInternationalLicenseById(int id)
+        // GET: /License/InternationalDetails/5
+        public async Task<IActionResult> InternationalDetails(int id)
         {
             var result = await _internationalLicenseService.GetInternationalLicenseByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index", "Driver");
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Issues a new international license.
-        /// </summary>
-        /// <param name="dto">The international license issuance data.</param>
-        /// <returns>The ID of the newly issued international license.</returns>
-        [HttpPost("international")]
-        public async Task<IActionResult> IssueInternationalLicense([FromBody] CreateNewInternationalLicenseDto dto)
+        // GET: /License/IssueInternational
+        public IActionResult IssueInternational()
         {
+            return View();
+        }
+
+        // POST: /License/IssueInternational
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> IssueInternational(CreateNewInternationalLicenseDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _internationalLicenseService.IssueInternationalLicenseAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetInternationalLicenseById), new { id = result.Data }, result.Data);
-        }
-    }
 
-    public class ReplaceLicenseRequest
-    {
-        public LicenseIssueReason Reason { get; set; }
-        public string Notes { get; set; }
+            TempData["Success"] = "International license issued successfully.";
+            return RedirectToAction(nameof(InternationalDetails), new { id = result.Data });
+        }
+
+        public async Task<IActionResult> History(int Id)
+        {
+            var result = await _licenseService.GetLicensesByDriverIdAsync(Id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction("Index", "Person");
+            }
+            ViewBag.Id = Id;
+            return View(result.Data);
+        }
     }
 }

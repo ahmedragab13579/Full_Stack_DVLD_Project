@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "People";
+}
+
+<div class="mb-6 flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-[#EEEEEE]">People</h2>
+    <div class="flex gap-3">
+        <div class="relative">
+            <input type="text" placeholder="Search people..." class="bg-slate-900 border border-slate-700 text-slate-300 text-sm rounded-lg pl-10 pr-4 py-2 focus:ring-dvld-teal focus:border-dvld-teal" />
+            <svg class="absolute left-3 top-2.5 h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <a asp-action="Create" class="px-4 py-2 bg-dvld-teal text-slate-900 text-sm font-semibold rounded-lg hover:bg-dvld-teal/90 transition-colors">
+            Add Person
+        </a>
+    </div>
+</div>
+
+<partial name="_Filters" />
+
+@{
+    var rows = Model is IEnumerable<object> data
+        ? data.Cast<object>().ToList()
+        : new List<object>();
+}
+
+<partial name="_ObjectTable" model="rows" />

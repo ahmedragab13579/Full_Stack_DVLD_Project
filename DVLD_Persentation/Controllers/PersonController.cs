@@ -1,115 +1,166 @@
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.UpdateDtos;
+using DVLD_Application.Dtos.TransfareDtos;
 using DVLD_Application.Services.Interfaces.Humans.Person;
+using DVLD_Application.Services.Interfaces.Country;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/people")]
-    [ApiController]
-    public class PersonController : ControllerBase
+    public class PersonController : Controller
     {
         private readonly IPersonService _personService;
+        private readonly ICountryService _countryService;
 
-        public PersonController(IPersonService personService)
+        public PersonController(IPersonService personService, ICountryService countryService)
         {
             _personService = personService;
+            _countryService = countryService;
         }
 
-        /// <summary>
-        /// Retrieves a list of all people.
-        /// </summary>
-        /// <returns>A list of person details.</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAllPeople()
+        // GET: /Person/Index
+        public async Task<IActionResult> Index()
         {
             var result = await _personService.GetAllPeopleAsync();
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves a person by their ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the person.</param>
-        /// <returns>The person details if found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPersonById(int id)
+        // GET: /Person/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _personService.GetPersonByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves a person by their National No.
-        /// </summary>
-        /// <param name="nationalNo">The national number of the person.</param>
-        /// <returns>The person details if found.</returns>
-        [HttpGet("national-no/{nationalNo}")]
-        public async Task<IActionResult> GetPersonByNationalNo(string nationalNo)
+        // GET: /Person/Search
+        public IActionResult Search()
         {
+            return View();
+        }
+
+        // POST: /Person/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search(string nationalNo)
+        {
+            if (string.IsNullOrWhiteSpace(nationalNo))
+            {
+                ModelState.AddModelError(string.Empty, "National Number is required.");
+                return View();
+            }
+
             var result = await _personService.GetPersonByNationalNoAsync(nationalNo);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return View();
             }
-            return Ok(result.Data);
+
+            return View("Details", result.Data);
         }
 
-        /// <summary>
-        /// Creates a new person.
-        /// </summary>
-        /// <param name="dto">The data to create the person.</param>
-        /// <returns>The ID of the created person.</returns>
-        [HttpPost]
-        public async Task<IActionResult> CreatePerson([FromBody] CreateNewPersonDto dto)
+        // GET: /Person/Create
+        public async Task<IActionResult> Create()
         {
+            var countriesResult = await _countryService.GetAllCountriesAsync();
+            ViewBag.Countries = countriesResult.IsSuccess ? countriesResult.Data : new List<CountryDto>();
+            return View();
+        }
+
+        // POST: /Person/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateNewPersonDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _personService.CreatePersonAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                var countriesResult = await _countryService.GetAllCountriesAsync();
+                ViewBag.Countries = countriesResult.IsSuccess ? countriesResult.Data : new List<CountryDto>();
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetPersonById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "Person created successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Updates an existing person.
-        /// </summary>
-        /// <param name="id">The ID of the person to update.</param>
-        /// <param name="dto">The updated data.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePerson(int id, [FromBody] UpdatePersonDto dto)
+        // GET: /Person/Edit/5
+        public async Task<IActionResult> Edit(int id)
         {
+            var result = await _personService.GetPersonByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            
+            var countriesResult = await _countryService.GetAllCountriesAsync();
+            ViewBag.Countries = countriesResult.IsSuccess ? countriesResult.Data : new List<CountryDto>();
+            
+            return View(result.Data);
+        }
+
+        // POST: /Person/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdatePersonDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _personService.UpdatePersonAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                var countriesResult = await _countryService.GetAllCountriesAsync();
+                ViewBag.Countries = countriesResult.IsSuccess ? countriesResult.Data : new List<CountryDto>();
+                return View(dto);
             }
-            return Ok("Person updated successfully.");
+
+            TempData["Success"] = "Person updated successfully.";
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        /// <summary>
-        /// Deletes a person by their ID.
-        /// </summary>
-        /// <param name="id">The ID of the person to delete.</param>
-        /// <returns>A success message.</returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePerson(int id)
+        // GET: /Person/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _personService.GetPersonByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            return View(result.Data);
+        }
+
+        // POST: /Person/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var result = await _personService.DeletePersonAsync(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Delete), new { id });
             }
-            return Ok("Person deleted successfully.");
+
+            TempData["Success"] = "Person deleted successfully.";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

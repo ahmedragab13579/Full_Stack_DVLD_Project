@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/drivers")]
-    [ApiController]
-    public class DriverController : ControllerBase
+    public class DriverController : Controller
     {
         private readonly IDriverService _driverService;
         private readonly ILicenseService _licenseService;
@@ -24,115 +22,118 @@ namespace DVLD_Persentation.Controllers
             _internationalLicenseService = internationalLicenseService;
         }
 
-        /// <summary>
-        /// Retrieves a list of all drivers.
-        /// </summary>
-        /// <returns>A list of drivers.</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAllDrivers()
+        // GET: /Driver/Index
+        public async Task<IActionResult> Index()
         {
             var result = await _driverService.GetAllDriversAsync();
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves a driver by their ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the driver.</param>
-        /// <returns>The driver details if found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetDriverById(int id)
+        // GET: /Driver/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _driverService.GetDriverByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves a driver by their associated person ID.
-        /// </summary>
-        /// <param name="personId">The ID of the person.</param>
-        /// <returns>The driver details if found.</returns>
-        [HttpGet("person/{personId}")]
-        public async Task<IActionResult> GetDriverByPersonId(int personId)
+        // GET: /Driver/ByPerson?Id=5
+        public async Task<IActionResult> ByPerson(int Id)
         {
-            var result = await _driverService.GetDriverByPersonIdAsync(personId);
+            var result = await _driverService.GetDriverByIdAsync(Id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return RedirectToAction(nameof(Details), new { id = result.Data.Id });
         }
 
-        /// <summary>
-        /// Retrieves a driver by their National No.
-        /// </summary>
-        /// <param name="nationalNo">The driver's national number.</param>
-        /// <returns>The driver details if found.</returns>
-        [HttpGet("national-no/{nationalNo}")]
-        public async Task<IActionResult> GetDriverByNationalNo(string nationalNo)
+        // GET: /Driver/Search
+        public IActionResult Search()
         {
+            return View();
+        }
+
+        // POST: /Driver/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Search(string nationalNo)
+        {
+            if (string.IsNullOrWhiteSpace(nationalNo))
+            {
+                ModelState.AddModelError(string.Empty, "National Number is required.");
+                return View();
+            }
+
             var result = await _driverService.GetDriverByNationalNoAsync(nationalNo);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return View();
             }
-            return Ok(result.Data);
+
+            return RedirectToAction(nameof(Details), new { id = result.Data.Id });
         }
 
-        /// <summary>
-        /// Creates a new driver.
-        /// </summary>
-        /// <param name="dto">The driver creation data.</param>
-        /// <returns>The ID of the created driver.</returns>
-        [HttpPost]
-        public async Task<IActionResult> CreateDriver([FromBody] CreateNewDriverDto dto)
+        // GET: /Driver/Create
+        public IActionResult Create()
         {
+            return View();
+        }
+
+        // POST: /Driver/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateNewDriverDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
             var result = await _driverService.CreateDriverAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetDriverById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "Driver created successfully.";
+            return RedirectToAction(nameof(Details), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Retrieves all local licenses associated with a driver.
-        /// </summary>
-        /// <param name="id">The driver's ID.</param>
-        /// <returns>A list of licenses.</returns>
-        [HttpGet("{id}/licenses")]
-        public async Task<IActionResult> GetDriverLicenses(int id)
+        // GET: /Driver/Licenses/5
+        public async Task<IActionResult> Licenses(int id)
         {
             var result = await _licenseService.GetLicensesByDriverIdAsync(id);
             if (!result.IsSuccess)
             {
-               return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Details), new { id });
             }
-            return Ok(result.Data);
+            ViewBag.DriverId = id;
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves all international licenses associated with a driver.
-        /// </summary>
-        /// <param name="id">The driver's ID.</param>
-        /// <returns>A list of international licenses.</returns>
-        [HttpGet("{id}/international-licenses")]
-        public async Task<IActionResult> GetDriverInternationalLicenses(int id)
+        // GET: /Driver/InternationalLicenses/5
+        public async Task<IActionResult> InternationalLicenses(int id)
         {
             var result = await _internationalLicenseService.GetInternationalLicensesByDriverIdAsync(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Details), new { id });
             }
-            return Ok(result.Data);
+            ViewBag.DriverId = id;
+            return View(result.Data);
         }
     }
 }

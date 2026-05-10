@@ -1,0 +1,107 @@
+@model dynamic
+
+@{
+    ViewData["Title"] = "Application Timeline";
+}
+
+<div class="w-full max-w-screen-xl mx-auto px-4 sm:px-6">
+    <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <a asp-action="LocalIndex" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-slate-400 hover:text-dvld-teal transition-all mb-3">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Applications
+            </a>
+            <h2 class="text-3xl font-bold text-white">Application #@Model.LocalDrivingLicenseApplicationID</h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+            <form asp-action="Cancel" asp-route-id="@Model.LocalDrivingLicenseApplicationID" method="post">
+                <button type="submit" class="px-6 py-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 text-sm font-bold uppercase tracking-wider hover:bg-red-500 hover:text-white transition-all">Cancel Application</button>
+            </form>
+            <button class="btn-primary text-sm font-bold px-8 py-3 shadow-lg">Process Next Step</button>
+        </div>
+    </div>
+
+    <div class="grid gap-8 lg:grid-cols-3">
+        <div class="lg:col-span-2 space-y-8">
+            <div class="dvld-card p-6 sm:p-8">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-dvld-teal/80 mb-8 border-b border-slate-700/50 pb-3">Application Timeline</h3>
+
+                <div class="relative pl-10 space-y-12 before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-1 before:bg-slate-800 rounded-full">
+                    <div class="relative">
+                        <div class="absolute -left-[35px] h-6 w-6 rounded-full bg-emerald-500 border-4 border-dvld-gray shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+                        <div>
+                            <p class="text-lg font-bold text-white">Application Submitted</p>
+                            <p class="text-sm text-slate-400 mt-1">Initial request for Class 3 License received.</p>
+                            <p class="text-xs text-slate-500 mt-2 uppercase font-bold tracking-wider">Oct 12, 2023 - 09:15 AM</p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute -left-[35px] h-6 w-6 rounded-full bg-emerald-500 border-4 border-dvld-gray shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+                        <div>
+                            <p class="text-lg font-bold text-white">Vision Test Passed</p>
+                            <p class="text-sm text-slate-400 mt-1">Cleared visual acuity and color perception tests.</p>
+                            <p class="text-xs text-slate-500 mt-2 uppercase font-bold tracking-wider">Oct 14, 2023 - 11:30 AM</p>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="absolute -left-[35px] h-6 w-6 rounded-full bg-dvld-teal animate-pulse border-4 border-dvld-gray shadow-[0_0_15px_rgba(0,173,181,0.5)]"></div>
+                        <div>
+                            <p class="text-lg font-bold text-dvld-teal">Theory Test Scheduled</p>
+                            <p class="text-sm text-slate-400 mt-1">Written examination for traffic rules and signs.</p>
+                            <div class="mt-4 inline-flex items-center gap-4 rounded-xl bg-dvld-teal/10 border border-dvld-teal/20 p-4">
+                                <svg class="h-6 w-6 text-dvld-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <div>
+                                    <p class="text-xs font-bold text-dvld-teal uppercase tracking-widest mb-1">Appointment</p>
+                                    <p class="text-sm text-white font-bold">Oct 25, 2023 - 02:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative opacity-40">
+                        <div class="absolute -left-[35px] h-6 w-6 rounded-full bg-slate-700 border-4 border-dvld-gray"></div>
+                        <div>
+                            <p class="text-lg font-bold text-slate-400">Practical Driving Test</p>
+                            <p class="text-sm text-slate-500 mt-1">On-road assessment with a certified instructor.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-8">
+            <div class="dvld-card p-6 sm:p-8">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-dvld-teal/80 mb-6 border-b border-slate-700/50 pb-3">Status Overview</h3>
+                <div class="space-y-5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-slate-400 font-bold uppercase tracking-wider">Current State</span>
+                        <span class="status-badge status-pending px-3 py-1 text-sm">In Progress</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-slate-400 font-bold uppercase tracking-wider">Passed Tests</span>
+                        <span class="text-white font-bold text-lg">1 <span class="text-slate-500 text-sm">/ 3</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dvld-card p-6 sm:p-8">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-dvld-teal/80 mb-6 border-b border-slate-700/50 pb-3">Applicant Profile</h3>
+                <div class="flex items-center gap-5">
+                    <div class="h-16 w-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
+                    </div>
+                    <div>
+                        <p class="text-lg font-bold text-white">Ahmed Ragab</p>
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-wider mt-1">National ID: N34291</p>
+                    </div>
+                </div>
+                <a href="#" class="btn-primary w-full mt-8 py-3 text-sm font-bold flex items-center justify-center gap-2 shadow-lg">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    View Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

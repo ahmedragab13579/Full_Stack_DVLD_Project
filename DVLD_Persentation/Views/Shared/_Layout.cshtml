@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DVLD</title>
+    <link rel="icon" type="image/png" href="~/Images/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+                    },
+                    colors: {
+                        'dvld-dark': '#222831',
+                        'dvld-gray': '#393E46',
+                        'dvld-teal': '#00ADB5',
+                        'dvld-light': '#EEEEEE',
+                        'dvld-secondary': '#4ECCA3',
+                        'dvld-danger': '#FF6B6B',
+                        'dvld-warning': '#FFD93D',
+                        'dvld-info': '#4D96FF',
+                        'chart-1': '#00ADB5',
+                        'chart-2': '#FF6B6B',
+                        'chart-3': '#4ECCA3',
+                        'chart-4': '#FFD93D',
+                        'chart-5': '#6BCB77',
+                        'chart-6': '#4D96FF',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="min-h-screen bg-dvld-dark text-dvld-light overflow-hidden">
+    <!-- Phase 1: Splash Screen -->
+    <div id="splashScreen" class="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-dvld-dark transition-all duration-700">
+        <div class="relative flex flex-col items-center">
+            <img src="~/Images/logo.png" class="h-24 w-24 animate-pulse" alt="DVLD Logo" />
+            <div class="mt-8 h-1 w-48 overflow-hidden rounded-full bg-slate-800">
+                <div id="splashProgress" class="h-full w-0 bg-dvld-teal transition-all duration-500"></div>
+            </div>
+            <p class="mt-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Initializing DVLD System</p>
+        </div>
+    </div>
+
+    <div class="flex min-h-screen flex-col">
+        <header class="border-b border-slate-700 bg-dvld-dark">
+            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3">
+                <a asp-controller="Home" asp-action="Index" class="flex items-center gap-3 text-lg font-bold text-dvld-light tracking-tight">
+                    <img src="~/Images/logo.png" class="h-8 w-8" alt="Logo" />
+                    <span>DVLD <span class="text-dvld-teal">System</span></span>
+                </a>
+                <div class="hidden flex-1 max-w-md mx-8 md:block relative">
+                    <div class="relative group">
+                        <input type="text" id="globalSearch" aria-label="Search profiles and applications" placeholder="Search profiles, applications..." class="bg-slate-800/50 border-slate-700 pl-10 pr-4 py-1.5 text-xs rounded-full focus:ring-dvld-teal/30 focus:border-dvld-teal transition-all w-full" />
+                        <svg class="absolute left-3 top-2 h-4 w-4 text-slate-500 group-hover:text-dvld-teal transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        
+                        <!-- Autocomplete Results -->
+                        <div id="searchSuggestions" class="absolute top-full left-0 right-0 mt-2 bg-dvld-gray border border-slate-700 rounded-xl shadow-2xl overflow-hidden opacity-0 invisible translate-y-2 transition-all duration-200 z-[100]">
+                            <div class="p-2 border-b border-slate-700 flex justify-between items-center">
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-slate-500">Quick Results</span>
+                                <span class="text-[9px] text-slate-600">Press Enter for all</span>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto" id="suggestionList">
+                                <!-- Suggestions injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden items-center gap-6 text-sm md:flex">
+                    @if (Context.Request.Cookies["dvld_user"] is string username && !string.IsNullOrWhiteSpace(username))
+                    {
+                        <div class="relative group">
+                            <button class="flex items-center gap-3 rounded-full bg-slate-800 p-1 pr-4 border border-slate-700 hover:border-dvld-teal transition-all">
+                                <div class="h-8 w-8 rounded-full bg-dvld-teal flex items-center justify-center text-dvld-dark font-bold">
+                                    @username.Substring(0, 1).ToUpper()
+                                </div>
+                                <span class="text-xs font-semibold text-slate-300">@username</span>
+                                <svg class="h-4 w-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <!-- Dropdown -->
+                            <div class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-dvld-gray border border-slate-700 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-1">
+                                    <a href="#" class="block px-4 py-2 text-xs text-slate-300 hover:bg-slate-700 hover:text-dvld-teal">Account Settings</a>
+                                    <a href="#" class="block px-4 py-2 text-xs text-slate-300 hover:bg-slate-700 hover:text-dvld-teal">Activity Logs</a>
+                                    <div class="border-t border-slate-700 my-1"></div>
+                                    <a asp-controller="Home" asp-action="Logout" class="block px-4 py-2 text-xs text-red-400 hover:bg-red-500/10">Sign Out</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="flex items-center gap-2 rounded-full bg-slate-800/50 pl-2 pr-1 py-1 border border-slate-700">
+                             <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Status</span>
+                             <span id="syncStatus" class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </div>
+                        <a asp-controller="Home" asp-action="Login" class="btn-primary py-1.5 px-6 text-xs">Sign In</a>
+                    }
+                </div>
+            </div>
+        </header>
+
+        <div class="mx-auto flex w-full max-w-7xl flex-1 gap-4 px-4 py-4">
+            <aside id="sidebar" class="hidden w-72 shrink-0 overflow-y-auto rounded border border-slate-700 bg-dvld-gray p-4 md:block">
+                <div class="space-y-6">
+                    <div>
+                        <p class="mb-3 text-[10px] font-bold uppercase tracking-widest text-dvld-teal/70">Core Modules</p>
+                        <nav class="space-y-1 text-sm">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "nav-active" : "")" asp-controller="Home" asp-action="Index">Dashboard</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Application" ? "nav-active" : "")" asp-controller="Application" asp-action="LocalIndex">Applications</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Appointment" ? "nav-active" : "")" asp-controller="Appointment" asp-action="Create">Appointments</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Test" ? "nav-active" : "")" asp-controller="Test" asp-action="Index">Tests</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "License" ? "nav-active" : "")" asp-controller="License" asp-action="Index">Licenses</a>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <p class="mb-3 text-[10px] font-bold uppercase tracking-widest text-dvld-teal/70">Management</p>
+                        <nav class="space-y-1 text-sm">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Person" ? "nav-active" : "")" asp-controller="Person" asp-action="Index">People Profiles</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Driver" ? "nav-active" : "")" asp-controller="Driver" asp-action="Index">Drivers Directory</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "DetainLicense" ? "nav-active" : "")" asp-controller="DetainLicense" asp-action="Index">Detained Licenses</a>
+                        </nav>
+                    </div>
+
+                    <div>
+                        <p class="mb-3 text-[10px] font-bold uppercase tracking-widest text-dvld-teal/70">Administration</p>
+                        <nav class="space-y-1 text-sm">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "nav-active" : "")" asp-controller="User" asp-action="Index">System Users</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "LicenseClass" ? "nav-active" : "")" asp-controller="LicenseClass" asp-action="Index">License Classes</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "nav-active" : "")" asp-controller="Reports" asp-action="Index">System Reports</a>
+                        </nav>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="flex-1 overflow-y-auto">
+                <partial name="_Breadcrumbs" />
+                <div class="dvld-card mb-4 flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-dvld-teal/70">DVLD System</p>
+                        <h1 class="text-xl font-bold text-dvld-light">@ViewData["Title"]</h1>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span id="liveClock" class="text-xs font-medium text-slate-400"></span>
+                        <div class="h-8 w-[1px] bg-slate-700"></div>
+                        <div class="flex items-center gap-2">
+                            <div class="h-2 w-2 animate-pulse rounded-full bg-dvld-teal"></div>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Live</span>
+                        </div>
+                    </div>
+                </div>
+
+                <partial name="_Alerts" />
+                @RenderBody()
+            </main>
+        </div>
+
+        <footer class="border-t border-slate-700 bg-dvld-dark py-6">
+            <div class="mx-auto grid w-full max-w-7xl gap-6 px-4 md:grid-cols-3">
+                <div>
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-dvld-teal">Driving License Management</p>
+                    <p class="text-xs text-slate-400">Streamlining license applications, tests, and issuance for a safer driving environment.</p>
+                </div>
+                <div>
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-dvld-teal">Quick Links</p>
+                    <ul class="space-y-1 text-xs text-slate-400">
+                        <li><a asp-controller="Home" asp-action="Index" class="hover:text-dvld-teal">Dashboard</a></li>
+                        <li><a asp-controller="Application" asp-action="LocalIndex" class="hover:text-dvld-teal">New Application</a></li>
+                        <li><a asp-controller="Reports" asp-action="Index" class="hover:text-dvld-teal">Reports</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-dvld-teal">Contact Support</p>
+                    <p class="text-xs text-slate-400">Email: support@dvld.gov</p>
+                    <p class="text-xs text-slate-400">Phone: +1 (555) 012-3456</p>
+                </div>
+            </div>
+            <div class="mx-auto mt-6 flex w-full max-w-7xl items-center justify-between border-t border-slate-800 px-4 pt-4 text-[10px] text-slate-500">
+                <span>&copy; @DateTime.Now.Year DVLD - All Rights Reserved</span>
+                <span class="uppercase tracking-widest">v1.0.0</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Phase 5: Global Modals & Notifications -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-[100] flex flex-col gap-3"></div>
+
+    <div id="modalBackdrop" class="fixed inset-0 z-[80] hidden bg-black/60 backdrop-blur-sm transition-opacity duration-300">
+        <div id="modalContainer" class="flex h-full w-full items-center justify-center p-4">
+            <!-- Modal content will be injected here -->
+        </div>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

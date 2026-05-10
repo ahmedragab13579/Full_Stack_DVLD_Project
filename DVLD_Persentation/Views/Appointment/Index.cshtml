@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Test Appointments";
+}
+
+<div class="bg-dvld-gray/20 rounded-3xl p-8 mb-8 border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
+    <div>
+        <div class="flex items-center gap-2 mb-2">
+            <span class="h-1 w-8 rounded-full bg-dvld-teal"></span>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Applications Management</p>
+        </div>
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Test Appointments</h2>
+        <p class="text-sm text-slate-500 mt-2 font-medium">Managing scheduled examinations for <span class="text-dvld-teal">Application #@ViewBag.LocalAppId</span></p>
+    </div>
+
+    <div>
+        <a asp-action="Create" asp-route-localAppId="@ViewBag.LocalAppId" asp-route-testTypeId="@ViewBag.TestTypeId"
+           class="inline-flex items-center gap-3 bg-dvld-teal hover:bg-dvld-teal/90 text-dvld-dark font-black px-8 py-4 rounded-2xl text-sm uppercase tracking-widest transition-all shadow-xl shadow-dvld-teal/10">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Schedule New Test
+        </a>
+    </div>
+</div>
+
+@{
+    var rows = Model is IEnumerable<object> data ? data.ToList() : new List<object>();
+}
+
+<div class="mt-4">
+    <partial name="_ObjectTable" model="rows" />
+</div>

@@ -1,0 +1,35 @@
+﻿@if (TempData["Success"] is string successMessage && !string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="mb-6 flex items-center gap-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 shadow-lg shadow-emerald-500/5 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <div class="flex flex-col">
+            <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-widest leading-none mb-1">Success</h4>
+            <p class="text-base text-emerald-100 font-medium">@successMessage</p>
+        </div>
+        <button onclick="this.parentElement.remove()" class="ml-auto text-emerald-500 hover:text-emerald-300 transition-colors">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg>
+        </button>
+    </div>
+}
+
+@if (TempData["Error"] is string errorMessage && !string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="mb-6 flex items-center gap-4 rounded-2xl border border-red-500/30 bg-red-500/10 p-5 shadow-lg shadow-red-500/5 animate-in fade-in slide-in-from-top-4 duration-300">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-500/20 text-red-400">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        </div>
+        <div class="flex flex-col">
+            <h4 class="text-sm font-bold text-red-400 uppercase tracking-widest leading-none mb-1">Attention Required</h4>
+            <p class="text-base text-red-100 font-medium">@errorMessage</p>
+        </div>
+        <button onclick="this.parentElement.remove()" class="ml-auto text-red-500 hover:text-red-300 transition-colors">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"></path></svg>
+        </button>
+    </div>
+}

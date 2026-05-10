@@ -1,133 +1,141 @@
-
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Services.Interfaces.Applications;
+using DVLD_Application.Services.Interfaces.Licenses.Local;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD_Persentation.Controllers
 {
-    [Route("api/applications")]
-    [ApiController]
-    public class ApplicationController : ControllerBase
+    public class ApplicationController : Controller
     {
         private readonly IApplicationService _applicationService;
         private readonly ILocalDrivingLicenseApplicationService _localApplicationService;
+        private readonly ILicenseClassService _licenseClassService;
 
         public ApplicationController(
             IApplicationService applicationService,
-            ILocalDrivingLicenseApplicationService localApplicationService)
+            ILocalDrivingLicenseApplicationService localApplicationService,
+            ILicenseClassService licenseClassService)
         {
             _applicationService = applicationService;
             _localApplicationService = localApplicationService;
+            _licenseClassService = licenseClassService;
         }
 
-        /// <summary>
-        /// Retrieves a list of all generic applications.
-        /// </summary>
-        /// <returns>A list of application details.</returns>
-        [HttpGet]
-        public async Task<IActionResult> GetAllApplications()
+        // GET: /Application/Index
+        public async Task<IActionResult> Index()
         {
             var result = await _applicationService.GetAllAsync();
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves an application by its ID.
-        /// </summary>
-        /// <param name="id">The unique identifier of the application.</param>
-        /// <returns>The application details if found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetApplicationById(int id)
+        // GET: /Application/Details/5
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _applicationService.GetByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
-        
-        /// <summary>
-        /// Retrieves a list of all local driving license applications.
-        /// </summary>
-        /// <returns>A list of local driving license applications.</returns>
-        [HttpGet("local-driving-license")]
-        public async Task<IActionResult> GetAllLocalApplications()
+
+        // GET: /Application/LocalIndex
+        public async Task<IActionResult> LocalIndex()
         {
             var result = await _localApplicationService.GetAllApplicationsAsync();
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return View(Enumerable.Empty<object>());
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Retrieves a local driving license application by its ID.
-        /// </summary>
-        /// <param name="id">The application ID.</param>
-        /// <returns>The local application details.</returns>
-        [HttpGet("local-driving-license/{id}")]
-        public async Task<IActionResult> GetLocalApplicationById(int id)
+        // GET: /Application/LocalDetails/5
+        public async Task<IActionResult> LocalDetails(int id)
         {
             var result = await _localApplicationService.GetLocalDrivingLicenseApplicationByIdAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(LocalIndex));
             }
-            return Ok(result.Data);
+            return View(result.Data);
         }
 
-        /// <summary>
-        /// Creates a new local driving license application.
-        /// </summary>
-        /// <param name="dto">The application creation data.</param>
-        /// <returns>The ID of the created application.</returns>
-        [HttpPost("local-driving-license")]
-        public async Task<IActionResult> CreateLocalApplication([FromBody] CreateNewLocalDrivingLicenseApplicationDto dto)
+        // GET: /Application/Create
+        public async Task<IActionResult> Create()
         {
+            var licenseClassesResult = await _licenseClassService.GetAllLicenseClassesAsync();
+            ViewBag.LicenseClasses = licenseClassesResult.IsSuccess ? licenseClassesResult.Data : Enumerable.Empty<object>();
+            return View();
+        }
+
+        // POST: /Application/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateNewLocalDrivingLicenseApplicationDto dto)
+        {
+            // ApplicationID is auto-generated, so we shouldn't validate it on creation
+            ModelState.Remove(nameof(dto.ApplicationID));
+
+            if (!ModelState.IsValid)
+            {
+                var licenseClassesResult = await _licenseClassService.GetAllLicenseClassesAsync();
+                ViewBag.LicenseClasses = licenseClassesResult.IsSuccess ? licenseClassesResult.Data : Enumerable.Empty<object>();
+                return View(dto);
+            }
+
             var result = await _localApplicationService.CreateNewApplicationAsync(dto);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                ModelState.AddModelError(string.Empty, result.Message);
+                var licenseClassesResult = await _licenseClassService.GetAllLicenseClassesAsync();
+                ViewBag.LicenseClasses = licenseClassesResult.IsSuccess ? licenseClassesResult.Data : Enumerable.Empty<object>();
+                return View(dto);
             }
-            return CreatedAtAction(nameof(GetLocalApplicationById), new { id = result.Data }, result.Data);
+
+            TempData["Success"] = "Application created successfully.";
+            return RedirectToAction(nameof(LocalDetails), new { id = result.Data });
         }
 
-        /// <summary>
-        /// Cancels a local driving license application.
-        /// </summary>
-        /// <param name="id">The application ID to cancel.</param>
-        /// <returns>A success message.</returns>
-        [HttpPut("local-driving-license/{id}/cancel")]
-        public async Task<IActionResult> CancelLocalApplication(int id)
+        // POST: /Application/Cancel/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(int id)
         {
-           var result = await _localApplicationService.CancelApplicationAsync(id);
-           if (!result.IsSuccess)
-           {
-               return BadRequest(result.Message);
-           }
-           return Ok("Application cancelled successfully.");
+            var result = await _localApplicationService.CancelApplicationAsync(id);
+            if (!result.IsSuccess)
+            {
+                TempData["Error"] = result.Message;
+            }
+            else
+            {
+                TempData["Success"] = "Application cancelled successfully.";
+            }
+            return RedirectToAction(nameof(LocalDetails), new { id });
         }
 
-        /// <summary>
-        /// Deletes a local driving license application.
-        /// </summary>
-        /// <param name="id">The application ID to delete.</param>
-        /// <returns>A success message.</returns>
-        [HttpDelete("local-driving-license/{id}")]
-        public async Task<IActionResult> DeleteLocalApplication(int id)
+        // POST: /Application/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
             var result = await _localApplicationService.DeleteApplicationAsync(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                TempData["Error"] = result.Message;
+                return RedirectToAction(nameof(LocalDetails), new { id });
             }
-            return Ok("Application deleted successfully.");
+
+            TempData["Success"] = "Application deleted successfully.";
+            return RedirectToAction(nameof(LocalIndex));
         }
     }
 }

@@ -41,12 +41,12 @@ namespace DVLD_Domain.Models
         {
         }
 
-        public Test(int appointmentId,int createdByUserId): base(createdByUserId)
+        public Test(int appointmentId,int? createdbyuserid): base(createdbyuserid)
         {
             if (appointmentId <= 0)
                 throw new ArgumentException("AppointmentID must be a positive integer.", nameof(appointmentId));
-            if(createdByUserId <= 0)
-                throw new ArgumentException("CreatedByUserId must be a positive integer.", nameof(createdByUserId));
+            if(createdbyuserid <= 0)
+                throw new ArgumentException("createdbyuserid must be a positive integer.", nameof(createdbyuserid));
             AppointmentID = appointmentId;
             TestResult = null;
         }

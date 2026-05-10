@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.TransfareDtos;
@@ -46,10 +46,10 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Test
             return test.AppointmentID;
         }
 
-        public async Task<TestDto> GetLastTestByPersonAndTestTypeAsync(int personId, int licenseClassId, int testTypeId)
+        public async Task<TestDto> GetLastTestByPersonAndTestTypeAsync(int Id, int licenseClassId, int testTypeId)
         {
             var dto = await _context.Tests
-                .Where(t => t.Appointment.LocalDrivingLicenseApplication.Application.PersonID == personId
+                .Where(t => t.Appointment.LocalDrivingLicenseApplication.Application.Id == Id
                             && t.Appointment.LocalDrivingLicenseApplication.LicenseClassID == licenseClassId
                             && t.Appointment.TestTypeID == testTypeId)
                 .OrderByDescending(t => t.Appointment.AppointmentDate)
@@ -79,6 +79,14 @@ namespace DVLD_E_Enfrastructure.Service.Implementaions.Test
                 .FirstOrDefaultAsync();
 
             return dto;
+        }
+
+        public async Task<List<TestDto>> GetAllTestsAsync()
+        {
+            return await _context.Tests
+                .AsNoTracking()
+                .ProjectTo<TestDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         public async Task<TestDto> GetTestByIdAsync(int testId)

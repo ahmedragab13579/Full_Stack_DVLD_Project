@@ -1,4 +1,4 @@
-﻿using DVLD_Domain.Models;
+using DVLD_Domain.Models;
 using AutoMapper;
 using DVLD_Application.Dtos.AddDtos;
 using DVLD_Application.Dtos.TransfareDtos;
@@ -23,6 +23,8 @@ namespace DVLD_Application.Service.Implementaions.Mapping
             CreateMap<Test, TestDto>().ReverseMap();
             CreateMap<TestType, TestTypeDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Country, CountryDto>().ReverseMap();
+            CreateMap<UpdatePersonDto, Person>().ReverseMap();
         }
     }
 }
