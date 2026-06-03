@@ -245,7 +245,7 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Quick access to core modules**
 - **Recent activity tracking**
 
-![Dashboard Screenshot](https://via.placeholder.com/1000x600?text=Dashboard)
+![Dashboard Screenshot](https://i.suar.me/e9jdQ/l)
 
 ### 2. License Application Management
 - **Multi-step wizard** for creating new applications
@@ -253,8 +253,9 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Applicant information validation**
 - **Application history and details**
 
-![Application Creation](https://via.placeholder.com/1000x600?text=Application+Creation)
-![Application List](https://via.placeholder.com/1000x600?text=Application+List)
+![Application Creation](https://i.suar.me/lZa7M/l)
+![Application List](https://i.suar.me/JppLa/l)
+![Application Creation](https://i.suar.me/YQQ1X/l)
 
 ### 3. Test Management
 - **Schedule driving tests** with appointment slots
@@ -262,8 +263,10 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Test result tracking** per applicant
 - **Multiple test types** support
 
-![Test Scheduling](https://via.placeholder.com/1000x600?text=Test+Scheduling)
-![Test Results](https://via.placeholder.com/1000x600?text=Test+Results)
+![Test Results](https://i.suar.me/qvNXl/l)
+![Test Scheduling](https://i.suar.me/2zJLK/l)
+![Tests List](https://i.suar.me/qvNXA/l)
+
 
 ### 4. Appointment System
 - **Book appointments** for applications and tests
@@ -271,15 +274,7 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Appointment confirmation and cancellation**
 - **Appointment history**
 
-![Appointment Booking](https://via.placeholder.com/1000x600?text=Appointment+Booking)
-
-### 5. License Issuance
-- **Issue licenses** upon successful test completion
-- **Multiple license classes** support
-- **License validity period** management
-- **Renewal tracking**
-
-![License Issuance](https://via.placeholder.com/1000x600?text=License+Issuance)
+![Appointment Booking](https://i.suar.me/2zJLK/l)
 
 ### 6. License Detention & Release
 - **Detain licenses** for violations
@@ -287,8 +282,8 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Release detention** with fee payment confirmation
 - **Detention history tracking**
 
-![License Detention](https://via.placeholder.com/1000x600?text=License+Detention)
-![License Release](https://via.placeholder.com/1000x600?text=License+Release)
+![License Detention](https://i.suar.me/NpaJ1/l)
+![Detain Licenses List](https://i.suar.me/jvLxm/l)
 
 ### 7. User Management
 - **Create system users** with authentication
@@ -296,16 +291,8 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Permission management** per module
 - **User activity tracking**
 
-![User Management](https://via.placeholder.com/1000x600?text=User+Management)
-![User Edit](https://via.placeholder.com/1000x600?text=User+Edit+Form)
-
-### 8. Reports
-- **Application statistics**
-- **Test results analysis**
-- **License issuance reports**
-- **System usage analytics**
-
-![Reports Dashboard](https://via.placeholder.com/1000x600?text=Reports+Dashboard)
+![User Management](https://i.suar.me/dgdOe/l)
+![User Edit](https://i.suar.me/LpLVn/l)
 
 ### 9. Person Management
 - **Maintain person profiles**
@@ -313,15 +300,16 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - **Contact details**
 - **Document tracking**
 
-![Person Directory](https://via.placeholder.com/1000x600?text=Person+Directory)
+![Person Directory](https://i.suar.me/a9eqG/l)
+![Person Directory](https://i.suar.me/1znJo/l)
 
-### 10. Driver Directory
-- **Central driver database**
-- **Search and filter drivers**
-- **License status overview**
-- **Driver history**
 
-![Driver Directory](https://via.placeholder.com/1000x600?text=Driver+Directory)
+### 10. Authentication
+- **Login**
+- **Regestration**
+
+![Authentication](https://i.suar.me/0ppxr/l)
+![Authentication](https://i.suar.me/ZzzqM/l)
 
 ---
 
@@ -431,54 +419,6 @@ Controllers and Views with Razor templating and Tailwind CSS styling.
 - `POST /User/Create` - Submit user creation
 - `GET /User/Edit/{id}` - Edit user (form)
 - `POST /User/Edit/{id}` - Update user
-
----
-
-## 📸 Screenshots & UI
-
-### Application Interface
-
-**Dashboard & Navigation**
-![Screenshot Placeholder 1](https://via.placeholder.com/1000x600?text=Dashboard+Navigation)
-
-**Application Wizard - Step 1**
-![Screenshot Placeholder 2](https://via.placeholder.com/1000x600?text=Application+Wizard+Step+1)
-
-**Application Wizard - Step 2**
-![Screenshot Placeholder 3](https://via.placeholder.com/1000x600?text=Application+Wizard+Step+2)
-
-**Application Wizard - Step 3**
-![Screenshot Placeholder 4](https://via.placeholder.com/1000x600?text=Application+Wizard+Step+3)
-
-**Test Management Interface**
-![Screenshot Placeholder 5](https://via.placeholder.com/1000x600?text=Test+Management)
-
-**Appointment Booking**
-![Screenshot Placeholder 6](https://via.placeholder.com/1000x600?text=Appointment+Booking)
-
-**License Details View**
-![Screenshot Placeholder 7](https://via.placeholder.com/1000x600?text=License+Details)
-
-**License Detention Form**
-![Screenshot Placeholder 8](https://via.placeholder.com/1000x600?text=License+Detention)
-
-**License Release Process**
-![Screenshot Placeholder 9](https://via.placeholder.com/1000x600?text=License+Release)
-
-**User Management Panel**
-![Screenshot Placeholder 10](https://via.placeholder.com/1000x600?text=User+Management)
-
-**Permission Assignment**
-![Screenshot Placeholder 11](https://via.placeholder.com/1000x600?text=Permission+Assignment)
-
-**Reports Dashboard**
-![Screenshot Placeholder 12](https://via.placeholder.com/1000x600?text=Reports+Dashboard)
-
-**Person Directory**
-![Screenshot Placeholder 13](https://via.placeholder.com/1000x600?text=Person+Directory)
-
-**Driver Directory**
-![Screenshot Placeholder 14](https://via.placeholder.com/1000x600?text=Driver+Directory)
 
 ---
 
