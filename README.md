@@ -555,6 +555,10 @@ This project is currently **unlicensed**. Please check the repository for licens
 
 **Author:** [Ahmed Ragab](https://github.com/ahmedragab13579)  
 **Repository:** [Full_Stack_DVLD_Project](https://github.com/ahmedragab13579/Full_Stack_DVLD_Project)
+- Contact: Ahmed Ragab
+- Email: ahmedharidy@gmail.com
+- Linked In: https://www.linkedin.com/in/ahmed-ragab-a7041b34b
+- Work: https://www.forlanso.com/ar/bc/ahmd-ragab
 
 For issues, questions, or suggestions, please open an issue on GitHub.
 
